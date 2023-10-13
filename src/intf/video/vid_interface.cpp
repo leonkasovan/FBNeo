@@ -18,9 +18,9 @@
 	extern struct VidOut VidOutPi;
 #elif defined (BUILD_SDL2)
 	extern struct VidOut VidOutSDL2;
-	extern struct VidOut VidOutSDL2Opengl;
+	// extern struct VidOut VidOutSDL2Opengl;
 #elif defined (BUILD_SDL)
-	extern struct VidOut VidOutSDLOpenGL;
+	// extern struct VidOut VidOutSDLOpenGL;
 	extern struct VidOut VidOutSDLFX;
 #elif defined (_XBOX)
 	extern struct VidOut VidOutD3D;
@@ -41,9 +41,9 @@ static struct VidOut *pVidOut[] = {
 	&VidOutPi,
 #elif defined (BUILD_SDL2)
 	&VidOutSDL2,
-	&VidOutSDL2Opengl,
+	// &VidOutSDL2Opengl,
 #elif defined (BUILD_SDL)
-	&VidOutSDLOpenGL,
+	// &VidOutSDLOpenGL,
 	&VidOutSDLFX,
 #elif defined (_XBOX)
 	&VidOutD3D,
@@ -93,7 +93,7 @@ INT32 bVidScanHalf = 1;							// Draw scanlines at half intensity instead of bla
 INT32 bVidScanDelay = 0;							// Blend the previous image with the current one
 INT32 nVidFeedbackIntensity = 0x40;				// Blend factor for previous frame (D3D blitter)
 INT32 nVidFeedbackOverSaturation = 0x00;			// Add this to the current frame blend factor
-INT32 bVidUseHardwareGamma = 1;					// Use the video hardware when correcting gamma
+INT32 bVidUseHardwareGamma = 0;					// Use the video hardware when correcting gamma
 INT32 bVidAutoSwitchFull = 0;						// 1 = auto switch to fullscreen on loading driver
 INT32 bVidArcaderes = 0;							// Use game resolution for fullscreen modes
 
