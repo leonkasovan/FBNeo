@@ -28,6 +28,7 @@ filter_out1 = $(filter-out $(firstword $1),$1)
 filter_out2 = $(call filter_out1,$(call filter_out1,$1))
 
 # system platform
+platform = rg35xx_unix
 ifeq ($(platform),)
 	platform = unix
 	ifeq ($(shell uname -a),)
@@ -113,6 +114,12 @@ ifneq (,$(findstring unix,$(platform)))
 		ifneq (,$(findstring neon,$(platform)))
 			HAVE_NEON = 1
 		endif
+	endif
+
+	ifneq (,$(findstring rg35xx,$(platform)))
+		PLATFORM_DEFINES += -marm -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=softfp
+		HAVE_NEON = 1
+		USE_CYCLONE = 1
 	endif
 
 # OS X
@@ -590,8 +597,8 @@ else
 	endif
 endif
 
-CFLAGS += $(fpic) $(FBNEO_DEFINES)
-CXXFLAGS += $(fpic) $(FBNEO_DEFINES)
+CFLAGS += $(fpic) $(FBNEO_DEFINES) -s
+CXXFLAGS += $(fpic) $(FBNEO_DEFINES) -s
 LDFLAGS += $(fpic)
 
 ifeq (,$(findstring msvc,$(platform)))
@@ -750,6 +757,7 @@ else
 	$(LD) $(LINKOUT)$@ $(SHARED) $^ $(LDFLAGS) $(LIBS)
 endif
 endif
+	/opt/miyoo/bin/arm-linux-strip -s $@
 
 clean-objs:
 	rm -f $(OBJS)
