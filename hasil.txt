@@ -1,0 +1,8 @@
+1. warna jadi kebiruan
+check di 
+D:\Projects\FBNeo\src\burner\misc.cpp
+D:\Projects\FBNeo\src\burner\sdl\main.cpp
+  bVidUseHardwareGamma = 0;
+	bHardwareGammaOnly = 0;
+
+2. Gamepad Input not working
