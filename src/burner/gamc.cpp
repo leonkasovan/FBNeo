@@ -745,10 +745,10 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 				KEY(FBK_B);
 			}
 			if (strcmp(szi, "fire 3") == 0) {
-				KEY(FBK_X);
+				KEY(FBK_Y);
 			}
 			if (strcmp(szi, "fire 4") == 0) {
-				KEY(FBK_Y);
+				KEY(FBK_X);
 			}
 
 //			if (_stricmp(szi, "Button ABC") == 0) {
