@@ -22,10 +22,10 @@ UNICODE = 1
 #BUILD_A68K = 1
 
 # Include x86 Assembly routines
-BUILD_X86_ASM = 1
+# BUILD_X86_ASM = 1
 
 # Include GCC optmisations for your CPU e.g use -march=native. WARNING: This might mean that the generated binaries will not run on other peoples (older) machines!
-#BUILD_NATIVE = 1
+BUILD_NATIVE = 1
 
 # Build for x64 targets (MinGW64 and MSVC only, this will undefine BUILD_A68K and BUILD_X86_ASM)
 #BUILD_X64_EXE = 1
@@ -37,7 +37,7 @@ BUILD_X86_ASM = 1
 INCLUDE_7Z_SUPPORT = 1
 
 # Include AVI recording support (uses Video For Windows)
-INCLUDE_AVI_RECORDING = 1
+# INCLUDE_AVI_RECORDING = 1
 
 # Include LUA support (on Windows Standalone, LUA is enabled regardless)
 #INCLUDE_LUA_SUPPORT = 1
@@ -117,5 +117,8 @@ vc: FORCE
 
 pi: FORCE
 	@$(MAKE) -s -f makefile.pi
+
+rg35xx: FORCE
+	@$(MAKE) -s -f makefile.rg35xx
 
 FORCE:
