@@ -221,6 +221,7 @@ INT32 Mapcoins(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 
 INT32 display_set_controls()
 {
+	fprintf(stderr, "src/burner/sdl/input.cpp:%d:display_set_controls\n", __LINE__);
 	struct GameInp* pgi = NULL;
 	unsigned int i;
 	for (i = 0, pgi = GameInp; i < nGameInpCount; i++, pgi++) {
@@ -235,8 +236,7 @@ INT32 display_set_controls()
 		if (bii.szInfo == NULL) {
 			bii.szInfo = "";
 		}
-		printf("%s %s\n", bii.szInfo, InputCodeDesc(pgi->Input.Switch.nCode));
-
+		fprintf(stderr, "%s %s\n", bii.szInfo, InputCodeDesc(pgi->Input.Switch.nCode));
 	}
 
 	return 0;

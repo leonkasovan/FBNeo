@@ -112,7 +112,7 @@ int DrvInit(int nDrvNum, bool bRestore)
 	if(bSaveInputs) ConfigGameLoadHardwareDefaults();
 
 	InputMake(true);
-	GameInpDefault();
+	GameInpDefault(); // ini yang harus diubah
 
 	if (DoLibInit())                         // Init the Burn library's driver
 	{

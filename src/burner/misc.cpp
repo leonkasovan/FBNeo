@@ -80,32 +80,43 @@ static UINT32 __cdecl HighCol24Gamma(INT32 r, INT32 g, INT32 b, INT32  /* i */)
 
 INT32 SetBurnHighCol(INT32 nDepth)
 {
+	const char *str = "";
+	const char *str2 = "";
 	VidRecalcPal();
 
 	if (bDoGamma && ((nVidFullscreen && !bVidUseHardwareGamma) || (!nVidFullscreen && !bHardwareGammaOnly))) {
 		if (nDepth == 15) {
 			VidHighCol = HighCol15Gamma;
+			str = "VidHighCol = HighCol15Gamma";
 		}
 		if (nDepth == 16) {
 			VidHighCol = HighCol16Gamma;
+			str = "VidHighCol = HighCol16Gamma";
 		}
 		if (nDepth > 16) {
 			VidHighCol = HighCol24Gamma;
+			str = "VidHighCol = HighCol24Gamma";
 		}
 	} else {
 		if (nDepth == 15) {
 			VidHighCol = HighCol15;
+			str = "VidHighCol = HighCol15";
 		}
 		if (nDepth == 16) {
 			VidHighCol = HighCol16;
+			str = "VidHighCol = HighCol16";
 		}
 		if (nDepth > 16) {
 			VidHighCol = HighCol24;
+			str = "VidHighCol = HighCol24";
 		}
 	}
 	if ((bDrvOkay && !(BurnDrvGetFlags() & BDF_16BIT_ONLY)) || nDepth <= 16) {
+		VidHighCol = HighCol24; // force it
 		BurnHighCol = VidHighCol;
+		str2 = "BurnHighCol = VidHighCol";
 	}
+	fprintf(stderr, "src/burner/misc.cpp:%d:SetBurnHighCol: nDepth=%d bDoGamma=%d nVidFullscreen=%d bVidUseHardwareGamma=%d bHardwareGammaOnly=%d\n[%s] [%s]\n",__LINE__, nDepth, bDoGamma, nVidFullscreen, bVidUseHardwareGamma, bHardwareGammaOnly, str, str2);
 
 	return 0;
 }

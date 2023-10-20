@@ -519,7 +519,7 @@ static void GameInpInitMacros()
 				if (_stricmp(" Right", bii.szName + 2) == 0) pArrow[3] = bii.pVal;
 
 				if ((SETS_VS) && pArrow[0] && pArrow[1] && pArrow[2] && pArrow[3]) {
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨I");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½I");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -530,7 +530,7 @@ static void GameInpInitMacros()
 					nMacroCount++;
 					pgi++;
 
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨J");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½J");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -541,7 +541,7 @@ static void GameInpInitMacros()
 					nMacroCount++;
 					pgi++;
 
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨L");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½L");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -552,7 +552,7 @@ static void GameInpInitMacros()
 					nMacroCount++;
 					pgi++;
 
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨K");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½K");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -2020,6 +2020,7 @@ static INT32 AddCustomMacro(TCHAR* szValue, bool bOverWrite)
 
 INT32 GameInputAutoIni(INT32 nPlayer, TCHAR* lpszFile, bool bOverWrite)
 {
+	fprintf(stderr, "src/burner/gami.cpp:%d:GameInputAutoIni %s\n", __LINE__, lpszFile);
 	TCHAR szLine[1024];
 	INT32 nFileVersion = 0;
 	UINT32 i;
@@ -2028,6 +2029,7 @@ INT32 GameInputAutoIni(INT32 nPlayer, TCHAR* lpszFile, bool bOverWrite)
 
 	FILE* h = _tfopen(lpszFile, _T("rt"));
 	if (h == NULL) {
+		fprintf(stderr, "src/burner/gami.cpp:%d:GameInputAutoIni %s\n", __LINE__, "Fail open config");
 		return 1;
 	}
 
@@ -2204,7 +2206,7 @@ INT32 ConfigGameLoadHardwareDefaults()
 			}
 		}
 	}
-
+	fprintf(stderr, "src/burner/gami.cpp:%d:ConfigGameLoadHardwareDefaults: nApplyHardwareDefaults=%d szFileName=%s\n", __LINE__, nApplyHardwareDefaults, szFileName);
 	if (nApplyHardwareDefaults) {
 		for (INT32 nPlayer = 0; nPlayer < nMaxPlayers; nPlayer++) {
 			GameInputAutoIni(nPlayer, szFileName, true);
@@ -2223,7 +2225,7 @@ INT32 GameInpDefault()
 	struct GameInp* pgi;
 	struct BurnInputInfo bii;
 	UINT32 i;
-
+	fprintf(stderr, "src/burner/gami.cpp:%d:GameInpDefault Ini yang harus diubah\n", __LINE__);
 #if defined(BUILD_SDL2) && !defined(SDL_WINDOWS)
 	TCHAR *szSDLconfigPath = NULL;
 	szSDLconfigPath = SDL_GetPrefPath("fbneo", "config");
@@ -2344,6 +2346,7 @@ INT32 GameInpWrite(FILE* h)
 // Read a GameInp in
 INT32 GameInpRead(TCHAR* szVal, bool bOverWrite)
 {
+	// fprintf(stderr, "src/burner/gami.cpp:%d:GameInpRead\n", __LINE__);
 	INT32 nRet;
 	TCHAR* szQuote = NULL;
 	TCHAR* szEnd = NULL;

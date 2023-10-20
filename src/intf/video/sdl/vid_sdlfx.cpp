@@ -92,6 +92,8 @@ static int BlitFXInit()
 	// Use our callback to get colors:
 	SetBurnHighCol(nVidImageDepth);
 
+	fprintf(stderr, "src/intf/video/sdl/vid_sdlfx.cpp:%d:BlitFXInit: nVidImageDepth=%d nVidImageBPP=%d nBurnBpp=%d nUseBlitter=%d\n", __LINE__, nVidImageDepth, nVidImageBPP, nBurnBpp, nUseBlitter);
+
 	// Make the normal memory buffer
 	if (VidSAllocVidImage()) {
 		BlitFXExit();
@@ -276,7 +278,7 @@ static int GetSettings(InterfaceInfo* pInfo)
 {
 	TCHAR szString[MAX_PATH] = _T("");
 
-	_sntprintf(szString, MAX_PATH, _T("Prescaling using %s (%i× zoom)"), VidSoftFXGetEffect(nUseBlitter), nSize);
+	_sntprintf(szString, MAX_PATH, _T("Prescaling using %s (%iï¿½ zoom)"), VidSoftFXGetEffect(nUseBlitter), nSize);
 	IntInfoAddStringModule(pInfo, szString);
 
 	if (nRotateGame) {

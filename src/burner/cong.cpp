@@ -37,6 +37,7 @@ INT32 ConfigGameLoad(bool bOverWrite)
 	if (h == NULL) {
 		// Not command line start, always -1
 		if (-1 == nSubDrvSelected) return 1;
+		// if (-1 == nSubDrvSelected) return 1;
 
 		// Command line to start a subgame - game configuration not found
 		h = _tfopen(GameConfigName(), _T("wt"));	// Create

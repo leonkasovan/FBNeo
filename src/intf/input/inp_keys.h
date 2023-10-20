@@ -146,3 +146,7 @@
 #define FBK_MYCOMPUTER      0xEB				// My Computer
 #define FBK_MAIL            0xEC				// Mail
 #define FBK_MEDIASELECT     0xED				// Media Select
+
+// Tambah disini untuk tombol di RG35XX
+#define FBK_RG35XX_START    0x62
+#define FBK_RG35XX_SELECT   0x63
