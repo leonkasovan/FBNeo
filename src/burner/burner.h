@@ -9,7 +9,9 @@
 #include <math.h>
 #include <assert.h>
 #include <ctype.h>
-
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "tchar.h"
 
 // Macro to make quoted strings

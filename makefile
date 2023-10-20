@@ -16,7 +16,7 @@ export
 #
 
 # Include Unicode support
-UNICODE = 1
+# UNICODE = 1
 
 # Build A68K ASM 68000 core
 #BUILD_A68K = 1

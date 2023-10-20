@@ -165,7 +165,7 @@ static int Init()
 		}
 	}
 	else {
-		if ((sdlsFramebuf = SDL_SetVideoMode(nGameWidth * nSize, nGameHeight * nSize, 0, SDL_RESIZABLE | SDL_HWSURFACE)) == NULL) {
+		if ((sdlsFramebuf = SDL_SetVideoMode(nGameWidth * nSize, nGameHeight * nSize, nVidDepth, SDL_RESIZABLE | SDL_HWSURFACE)) == NULL) {
 			return 1;
 		}
 	}
@@ -276,7 +276,7 @@ static int GetSettings(InterfaceInfo* pInfo)
 {
 	TCHAR szString[MAX_PATH] = _T("");
 
-	_sntprintf(szString, MAX_PATH, _T("Prescaling using %s (%i× zoom)"), VidSoftFXGetEffect(nUseBlitter), nSize);
+	_sntprintf(szString, MAX_PATH, _T("Prescaling using %s (%iï¿½ zoom)"), VidSoftFXGetEffect(nUseBlitter), nSize);
 	IntInfoAddStringModule(pInfo, szString);
 
 	if (nRotateGame) {

@@ -310,6 +310,35 @@ int main(int argc, char* argv[])
 	}
 
 #ifdef BUILD_SDL
+#define DIRCNT 9
+	// Make sure there are roms and cfg subdirectories
+	TCHAR szDirs[DIRCNT][MAX_PATH] = {
+		{_T("config")},
+		{_T("config/games")},
+		{_T("config/ips")},
+		{_T("config/localisation")},
+		{_T("config/presets")},
+		{_T("recordings")},
+		{_T("roms")},
+		{_T("savestates")},
+		{_T("screenshots")},
+	};
+	TCHAR currentPath[MAX_PATH];
+	for(int x = 0; x < DIRCNT; x++) {
+		snprintf(currentPath, MAX_PATH, "%s", szDirs[x]);
+		// Check if the directory already exists
+		if (access(currentPath, F_OK) == 0) {
+			// printf("Directory already exists.\n");
+		} else {
+			// If the directory doesn't exist, create it
+			if (mkdir(currentPath, 0777) == 0) {
+				// printf("Directory created successfully.\n");
+			} else {
+				fprintf(stderr, "Error creating directory %s", currentPath);
+			}
+		}
+	}
+#undef DIRCNT
 	SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
 
 	SDL_WM_SetCaption("FinalBurn Neo", "FinalBurn Neo");
