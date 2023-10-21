@@ -146,3 +146,19 @@
 #define FBK_MYCOMPUTER      0xEB				// My Computer
 #define FBK_MAIL            0xEC				// Mail
 #define FBK_MEDIASELECT     0xED				// Media Select
+
+#define FBK_RG35XX_UP       0xF0
+#define FBK_RG35XX_DOWN     0xF1
+#define FBK_RG35XX_LEFT     0xF2
+#define FBK_RG35XX_RIGHT    0xF3
+#define FBK_RG35XX_A        0xF4
+#define FBK_RG35XX_B        0xF5
+#define FBK_RG35XX_X        0xF6
+#define FBK_RG35XX_Y        0xF7
+#define FBK_RG35XX_SELECT   0xF8
+#define FBK_RG35XX_START    0xF9
+#define FBK_RG35XX_MENU     0xFA
+#define FBK_RG35XX_L1       0xFB
+#define FBK_RG35XX_R1       0xFC
+#define FBK_RG35XX_L2       0xFD
+#define FBK_RG35XX_R2       0xFE

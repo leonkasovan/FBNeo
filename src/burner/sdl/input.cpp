@@ -235,8 +235,7 @@ INT32 display_set_controls()
 		if (bii.szInfo == NULL) {
 			bii.szInfo = "";
 		}
-		printf("%s %s\n", bii.szInfo, InputCodeDesc(pgi->Input.Switch.nCode));
-
+		fprintf(stderr, "%s: %s\n", bii.szInfo, InputCodeDesc(pgi->Input.Switch.nCode));
 	}
 
 	return 0;
@@ -257,6 +256,5 @@ INT32 Init_Joysticks(int p_one_use_joystick)
 		GameInpConfig(0, 1, 1);
 		GameInpConfig(1, 2, 1);
 	}
-	display_set_controls();
 	return 0;
 };

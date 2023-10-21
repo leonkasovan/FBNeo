@@ -271,7 +271,6 @@ int main(int argc, char* argv[])
 	// TODO: figure out if we can use hardware Gamma until then, force software gamma
 	bVidUseHardwareGamma = 0;
 	bHardwareGammaOnly = 0;
-	//
 
 	// Make version string
 	if (nBurnVer & 0xFF)

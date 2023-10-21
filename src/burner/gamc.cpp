@@ -193,7 +193,7 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 
 			// Player 1 controls
 			if (strcmp(szi, "p1 start") == 0) {
-				KEY(FBK_M);
+				KEY(FBK_RG35XX_START);
 				return 0;
 			}
 			if (strcmp(szi, "p1 select" ) == 0) {
@@ -201,7 +201,7 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 				return 0;
 			}
 			if (strcmp(szi, "p1 coin" ) == 0) {
-				KEY(FBK_N);
+				KEY(FBK_RG35XX_SELECT);
 				return 0;
 			}
 
@@ -726,29 +726,29 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	if (nDevice == -1) {
 		// Keyboard
 		if (strcmp(szi, "up") == 0 || strcmp(szi, "y-axis-neg") == 0) {
-			KEY(FBK_W);
+			KEY(FBK_RG35XX_UP);
 		}
 		if (strcmp(szi, "down") == 0 || strcmp(szi, "y-axis-pos") == 0) {
-			KEY(FBK_S);
+			KEY(FBK_RG35XX_DOWN);
 		}
 		if (strcmp(szi, "left") == 0 || strcmp(szi, "x-axis-neg") == 0) {
-			KEY(FBK_Q);
+			KEY(FBK_RG35XX_LEFT);
 		}
 		if (strcmp(szi, "right") == 0 || strcmp(szi, "x-axis-pos") == 0) {
-			KEY(FBK_D);
+			KEY(FBK_RG35XX_RIGHT);
 		}
 		if (nFireButtons == 4) {
 			if (strcmp(szi, "fire 1") == 0) {
-				KEY(FBK_A);
+				KEY(FBK_RG35XX_A);
 			}
 			if (strcmp(szi, "fire 2") == 0) {
-				KEY(FBK_B);
+				KEY(FBK_RG35XX_B);
 			}
 			if (strcmp(szi, "fire 3") == 0) {
-				KEY(FBK_Y);
+				KEY(FBK_RG35XX_Y);
 			}
 			if (strcmp(szi, "fire 4") == 0) {
-				KEY(FBK_X);
+				KEY(FBK_RG35XX_X);
 			}
 
 //			if (_stricmp(szi, "Button ABC") == 0) {
@@ -764,22 +764,22 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 		} else {
 			if (bStreetFighterLayout) {
 				if (strcmp(szi, "fire 1") == 0) {
-					KEY(FBK_A);
+					KEY(FBK_RG35XX_A);
 				}
 				if (strcmp(szi, "fire 2") == 0) {
-					KEY(FBK_S);
+					KEY(FBK_RG35XX_B);
 				}
 				if (strcmp(szi, "fire 3") == 0) {
-					KEY(FBK_D);
+					KEY(FBK_RG35XX_Y);
 				}
 				if (strcmp(szi, "fire 4") == 0) {
-					KEY(FBK_Z);
+					KEY(FBK_RG35XX_X);
 				}
 				if (strcmp(szi, "fire 5") == 0) {
-					KEY(FBK_X);
+					KEY(FBK_RG35XX_LEFT);
 				}
 				if (strcmp(szi, "fire 6") == 0) {
-					KEY(FBK_C);
+					KEY(FBK_RG35XX_RIGHT);
 				}
 				if (_stricmp(szi, "3� Punch") == 0) {
 					MACRO(FBK_F);
@@ -789,22 +789,22 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 				}
 			} else {
 				if (strcmp(szi, "fire 1") == 0) {
-					KEY(FBK_Z);
+					KEY(FBK_RG35XX_A);
 				}
 				if (strcmp(szi, "fire 2") == 0) {
-					KEY(FBK_X);
+					KEY(FBK_RG35XX_B);
 				}
 				if (strcmp(szi, "fire 3") == 0) {
-					KEY(FBK_C);
+					KEY(FBK_RG35XX_Y);
 				}
 				if (strcmp(szi, "fire 4") == 0) {
-					KEY(FBK_A);
+					KEY(FBK_RG35XX_X);
 				}
 				if (strcmp(szi, "fire 5") == 0) {
-					KEY(FBK_S);
+					KEY(FBK_RG35XX_LEFT);
 				}
 				if (strcmp(szi, "fire 6") == 0) {
-					KEY(FBK_D);
+					KEY(FBK_RG35XX_RIGHT);
 				}
 				if (strcmp(szi, "fire 7") == 0) {
 					KEY(FBK_Q);

@@ -519,7 +519,7 @@ static void GameInpInitMacros()
 				if (_stricmp(" Right", bii.szName + 2) == 0) pArrow[3] = bii.pVal;
 
 				if ((SETS_VS) && pArrow[0] && pArrow[1] && pArrow[2] && pArrow[3]) {
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨I");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½I");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -530,7 +530,7 @@ static void GameInpInitMacros()
 					nMacroCount++;
 					pgi++;
 
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨J");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½J");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -541,7 +541,7 @@ static void GameInpInitMacros()
 					nMacroCount++;
 					pgi++;
 
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨L");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½L");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -552,7 +552,7 @@ static void GameInpInitMacros()
 					nMacroCount++;
 					pgi++;
 
-					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "¨K");
+					sprintf(pgi->Macro.szName, "P%d %s", nPlayer + 1, "ï¿½K");
 					pgi->nInput = GIT_MACRO_AUTO;
 					pgi->nType = BIT_DIGITAL;
 					pgi->Macro.nMode = 0;
@@ -1627,6 +1627,21 @@ static struct { INT32 nCode; TCHAR* szName; } KeyNames[] = {
 	{ FBK_DEFNAME(FBK_MYCOMPUTER) },
 	{ FBK_DEFNAME(FBK_MAIL) },
 	{ FBK_DEFNAME(FBK_MEDIASELECT) },
+	{ FBK_RG35XX_UP, _T("RG35XX UP") },
+	{ FBK_RG35XX_DOWN, _T("RG35XX DOWN") },
+	{ FBK_RG35XX_LEFT, _T("RG35XX LEFT") },
+	{ FBK_RG35XX_RIGHT, _T("RG35XX RIGHT") },
+	{ FBK_RG35XX_A, _T("RG35XX A") },
+	{ FBK_RG35XX_B, _T("RG35XX B") },
+	{ FBK_RG35XX_X, _T("RG35XX X") },
+	{ FBK_RG35XX_Y, _T("RG35XX Y") },
+	{ FBK_RG35XX_SELECT, _T("RG35XX SELECT") },
+	{ FBK_RG35XX_START, _T("RG35XX START") },
+	{ FBK_RG35XX_MENU, _T("RG35XX MENU") },
+	{ FBK_RG35XX_L1, _T("RG35XX L1") },
+	{ FBK_RG35XX_R1, _T("RG35XX R1") },
+	{ FBK_RG35XX_L2, _T("RG35XX L2") },
+	{ FBK_RG35XX_R2, _T("RG35XX R2") },
 
 #undef FBK_DEFNAME
 

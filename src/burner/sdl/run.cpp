@@ -450,10 +450,12 @@ int RunMessageLoop()
 					bAppDoFast = 1;
 					break;
 				case SDLK_F9:
-					QuickState(0);
+				case 106:	// RG35_L2_CODE
+					QuickState(0);	// Load State
 					break;
 				case SDLK_F10:
-					QuickState(1);
+				case 107:	// RG35_R2_CODE
+					QuickState(1);	// Save State
 					break;
 				case SDLK_F11:
 					bAppShowFPS = !bAppShowFPS;
@@ -520,7 +522,7 @@ int RunMessageLoop()
 					bscreenshot = 0;
 					break;
 				case SDLK_F12:
-				case 117:
+				case 117:	// RG35_MENU_CODE
 					quit = 1;
 					break;
 
