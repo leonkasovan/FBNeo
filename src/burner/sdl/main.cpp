@@ -310,6 +310,24 @@ int main(int argc, char* argv[])
 
 #ifdef BUILD_SDL
 #define DIRCNT 9
+	{
+		char path[1024];
+		ssize_t count = readlink("/proc/self/exe", path, sizeof(path) - 1);
+		if (count != -1) {
+			path[count] = '\0';
+			char *lastSlash = strrchr(path, '/');
+			if (lastSlash != NULL) {
+				*lastSlash = '\0';
+			}
+		}
+		// fprintf(stderr, "argc=%d argv[0]=%s path=%s\n", argc, argv[0], path);
+		if (chdir(path) == 0) {
+			fprintf(stderr, "Success change dir=%s\n", path);
+		}else{
+			fprintf(stderr, "Fail change dir=%s\n", path);
+		}
+	}
+	
 	// Make sure there are roms and cfg subdirectories
 	TCHAR szDirs[DIRCNT][MAX_PATH] = {
 		{_T("config")},
@@ -405,11 +423,32 @@ int main(int argc, char* argv[])
 	// Search for a game now, for use in the menu and loading a games
 	if (romname != NULL)
 	{
+		char *p;
+
+		// is it filename with extention (.zip/.7z)?
+		p = strchr(romname,'.');
+		if (p){
+			*p = '\0';
+			p = strrchr(romname,'/');
+			if (p){
+				// make sure, config file is loaded => szAppRomPaths is initialized
+				strncpy(szAppRomPaths[0], romname, p-romname+1);	// insert argument's directory in first empty rom paths slot
+				fprintf(stderr, "Insert user-configured rom paths[0] = %s\n", szAppRomPaths[0]);
+				*p = '\0';
+				romname = p+1;
+			}
+			fprintf(stderr, "Trimmed rom name=[%s]\n", romname);
+		}else{
+			fprintf(stderr, "Rom name=[%s]\n", romname);
+		}
+		
+		// Search it in burn drivers database
 		for (i = 0; i < nBurnDrvCount; i++)
 		{
 			nBurnDrvActive = i;
 			if (strcmp(BurnDrvGetTextA(DRV_NAME), romname) == 0)
 			{
+				fprintf(stderr, "Rom [%s] found\n", romname);
 				break;
 			}
 		}
