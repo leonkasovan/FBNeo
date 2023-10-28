@@ -298,18 +298,35 @@ int main(int argc, char* argv[])
 
 	if ((romname == NULL) && !usemenu && !bAlwaysMenu && !dat)
 	{
-		printf("Usage: %s [-cd] [-joy] [-menu] [-novsync] [-integerscale] [-fullscreen] [-dat] [-autosave] [-nearest] [-linear] [-best] <romname>\n", argv[0]);
-		printf("Note the -menu switch does not require a romname\n");
+		printf("Usage: %s [-cd] [-integerscale] [-dat] [-autosave] [-nearest] [-linear] [-best] <romname>\n", argv[0]);
 		printf("e.g.: %s mslug\n", argv[0]);
-		printf("e.g.: %s -menu -joy\n", argv[0]);
+		printf("e.g.: %s roms/fbneo/dmnfrnt.zip\n", argv[0]);
 		printf("For NeoCD games:\n");
 		printf("%s neocdz -cd path/to/ccd/filename.cue (or .ccd)\n", argv[0]);
-		printf("Usage is restricted by the license at https://raw.githubusercontent.com/finalburnneo/FBNeo/master/src/license.txt\n");
+
 		return 0;
 	}
 
 #ifdef BUILD_SDL
 #define DIRCNT 9
+	{
+		char path[1024];
+		ssize_t count = readlink("/proc/self/exe", path, sizeof(path) - 1);
+		if (count != -1) {
+			path[count] = '\0';
+			char *lastSlash = strrchr(path, '/');
+			if (lastSlash != NULL) {
+				*lastSlash = '\0';
+			}
+		}
+		// fprintf(stderr, "argc=%d argv[0]=%s path=%s\n", argc, argv[0], path);
+		if (chdir(path) == 0) {
+			fprintf(stderr, "Success change dir=%s\n", path);
+		}else{
+			fprintf(stderr, "Fail change dir=%s\n", path);
+		}
+	}
+
 	// Make sure there are roms and cfg subdirectories
 	TCHAR szDirs[DIRCNT][MAX_PATH] = {
 		{_T("config")},
@@ -322,6 +339,9 @@ int main(int argc, char* argv[])
 		{_T("savestates")},
 		{_T("screenshots")},
 	};
+	//NOVAN TODO: 
+	// 1. save current directory
+	// 2. change to executable's directory
 	TCHAR currentPath[MAX_PATH];
 	for(int x = 0; x < DIRCNT; x++) {
 		snprintf(currentPath, MAX_PATH, "%s", szDirs[x]);
@@ -337,6 +357,7 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
+	// 3. change back to previous current directory
 #undef DIRCNT
 	SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
 
@@ -397,19 +418,40 @@ int main(int argc, char* argv[])
 		ConfigAppSave();		// for SDL2 this will also create folders in ~/.local/share/fbneo/
 	}
 	ComputeGammaLUT();
-#if defined(BUILD_SDL2) && !defined(SDL_WINDOWS)
-	bprintf = AppDebugPrintf;
+#if !defined(SDL_WINDOWS)
+	// bprintf = AppDebugPrintf;
 #endif
 	BurnLibInit();
-
+	
 	// Search for a game now, for use in the menu and loading a games
 	if (romname != NULL)
 	{
+		char *p;
+
+		// is it filename with extention (.zip/.7z)?
+		p = strchr(romname,'.');
+		if (p){
+			*p = '\0';
+			p = strrchr(romname,'/');
+			if (p){
+				// make sure, config file is loaded => szAppRomPaths is initialized
+				strncpy(szAppRomPaths[0], romname, p-romname+1);	// insert argument's directory in first empty rom paths slot
+				fprintf(stderr, "Insert user-configured rom paths[0] = %s\n", szAppRomPaths[0]);
+				*p = '\0';
+				romname = p+1;
+			}
+			fprintf(stderr, "Trimmed rom name=[%s]\n", romname);
+		}else{
+			fprintf(stderr, "Rom name=[%s]\n", romname);
+		}
+		
+		// Search it in burn drivers database
 		for (i = 0; i < nBurnDrvCount; i++)
 		{
 			nBurnDrvActive = i;
 			if (strcmp(BurnDrvGetTextA(DRV_NAME), romname) == 0)
 			{
+				fprintf(stderr, "Rom [%s] found\n", romname);
 				break;
 			}
 		}
@@ -447,7 +489,7 @@ int main(int argc, char* argv[])
 	{
 		if (i == nBurnDrvCount)
 		{
-			printf("%s is not supported by FinalBurn Neo.\n", romname);
+			fprintf(stderr, "%s is not supported by FinalBurn Neo.\n", romname);
 			return 1;
 		}
 
