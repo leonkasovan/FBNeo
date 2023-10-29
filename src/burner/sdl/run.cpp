@@ -17,7 +17,7 @@ static int          nNormalFrac = 0;        // Extra fraction we did
 
 static bool bAppDoStep = 0;
 bool        bAppDoFast = 0;
-bool        bAppShowFPS = 0;
+bool        bAppShowFPS = 1;
 static int  nFastSpeed = 6;
 static bool bscreenshot = 0;
 
@@ -84,6 +84,7 @@ static void DisplayFPSInit()
 	nDoFPS = 0;
 	fpstimer = 0;
 	nPreviousFrames = nFramesRendered;
+	fpsstring[0] = '\0';
 }
 
 static void DisplayFPS()
@@ -425,6 +426,7 @@ int RunMessageLoop()
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
+			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Event Type=%d", event.type);
 			switch (event.type)
 			{
 			case SDL_QUIT:                                        /* Windows was closed */
@@ -529,6 +531,9 @@ int RunMessageLoop()
 				default:
 					break;
 				}
+				break;
+			case SDL_JOYBUTTONUP:
+				if (event.jbutton.button == 9) quit = 1;
 				break;
 			}
 		}
