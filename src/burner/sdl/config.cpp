@@ -79,7 +79,7 @@ int ConfigAppLoad()
 	{
 		return 1;
 	}
-	printf("Loading config from %s\n", szConfig);
+	fprintf(stderr, "Loading config from %s\n", szConfig);
 #define VAR(x)    { char *szValue = LabelCheck(szLine, #x); \
                     if (szValue) { x = strtol(szValue, NULL, 0); } }
 #define FLT(x)    { char *szValue = LabelCheck(szLine, #x); \
