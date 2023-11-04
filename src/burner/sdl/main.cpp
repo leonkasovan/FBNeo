@@ -225,6 +225,7 @@ void DoGame(int gameToRun)
 	{
 		MediaInit();
 		display_set_controls();
+		ConfigGameSave(true);
 		RunMessageLoop();
 	}
 	else

@@ -1,0 +1,4 @@
+src/burner/sdl/main.cpp void DoGame(int gameToRun)
+	src/burner/sdl/drv.cpp int DrvInit(int nDrvNum, bool bRestore)
+		src/burner/gami.cpp INT32 GameInpDefault()
+			src/burner/gami.cpp static INT32 GameInpAutoOne(struct GameInp* pgi, char* szi)
