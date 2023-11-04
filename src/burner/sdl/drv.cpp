@@ -3,7 +3,7 @@
 #include "neocdlist.h"
 int bDrvOkay = 0;                       // 1 if the Driver has been initted okay, and it's okay to use the BurnDrv functions
 
-char szAppRomPaths[DIRS_MAX][MAX_PATH] = { { "/usr/local/share/roms/" }, { "roms/" }, };
+char szAppRomPaths[DIRS_MAX][MAX_PATH] = { { "" }, { "/mnt/mmc/Roms/FBNEO/" }, { "/mnt/mmc/Roms/ARCADE/" }, { "/mnt/mmc/Roms/NEOGEO/" }, { "/mnt/mmc/Roms/CPS1/" }, { "/mnt/mmc/Roms/CPS2/" }, { "/mnt/mmc/Roms/CPS3/" },};
 
 static bool bSaveRAM = false;
 
