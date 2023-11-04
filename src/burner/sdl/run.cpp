@@ -426,7 +426,6 @@ int RunMessageLoop()
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
-			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Event Type=%d", event.type);
 			switch (event.type)
 			{
 			case SDL_QUIT:                                        /* Windows was closed */
@@ -535,9 +534,12 @@ int RunMessageLoop()
 			case SDL_JOYBUTTONUP:
 				if (event.jbutton.button == 9) quit = 1;
 				break;
-			}
+			case SDL_JOYBUTTONDOWN:
+				if (event.jbutton.button == 9) quit = 1;
+				break;
+						}
 		}
-		
+		if (SDL_JoystickGetButton(0, 9)) quit = 1; 
 		RunIdle();
 
 	}
