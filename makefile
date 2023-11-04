@@ -118,4 +118,7 @@ vc: FORCE
 pi: FORCE
 	@$(MAKE) -s -f makefile.pi
 
+rg35xx: FORCE
+	@$(MAKE) -s -f makefile.rg35xx
+
 FORCE:

@@ -1,3 +1,3 @@
 #!/bin/bash
-make sdl
+make rg35xx
 # make -j8 -C src/burner/libretro/

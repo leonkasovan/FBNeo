@@ -69,7 +69,7 @@ depobj	+= 	neocdlist.o \
 			\
 			inp_sdl.o aud_sdl.o support_paths.o ips_manager.o scrn.o localise_gamelist.o \
 			cd_sdl2.o config.o main.o run.o stringset.o bzip.o drv.o media.o romdata.o \
-			inpdipsw.o vid_sdlfx.o inputbuf.o replay.o vid_sdlopengl.o input.o stated.o
+			inpdipsw.o vid_sdlfx.o inputbuf.o replay.o input.o stated.o
 
 ifdef INCLUDE_7Z_SUPPORT
 depobj	+=	un7z.o \
@@ -93,7 +93,7 @@ incdir	= $(foreach dir,$(alldir),-I$(srcdir)$(dir)) -I$(objdir)dep/generated \
 ifdef WINDOWS
 lib	= -lstdc++ -lSDL `sdl-config --libs` -lopengl32  -lm
 else
-lib	= -lstdc++ -lSDL `sdl-config --libs` -lGL -lm -lpthread
+lib	= -lstdc++ -lSDL `sdl-config --libs` -lm -lpthread
 endif
 
 ifdef DARWIN
@@ -157,12 +157,14 @@ ifdef DARWIN
 	# GCC 4.2.1 Segfaults during build
 	CC	= gcc-9
 else
-	CC	= gcc
+	CC	= /opt/miyoo/bin/arm-miyoo-linux-uclibcgnueabi-gcc
 endif
 
 CXX	= $(CC)
 LD	= $(CC)
-AS	= nasm
+AS	= /opt/miyoo/bin/arm-miyoo-linux-uclibcgnueabi-as
+HOST_CC = gcc
+HOST_CXX = $(HOST_CC)
 
 #LDFLAGS	= -static
 
@@ -256,8 +258,8 @@ else
 endif
 
 ifdef BUILD_NATIVE
-	CFLAGS	 += -march=native -mtune=native
-	CXXFLAGS += -march=native -mtune=native
+	CFLAGS	 += -marm -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=softfp 
+	CXXFLAGS += -marm -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=softfp 
 endif
 
 # For zlib
@@ -295,12 +297,12 @@ ifeq ($(MAKELEVEL),1)
 ifdef DEPEND
 
 all:	init $(drvdep) $(autdep) $(autobj) $(autdrv)
-	@$(MAKE) -f makefile.sdl -s
+	@$(MAKE) -f makefile.rg35xx -s
 
 else
 
 all:	init $(autobj) $(autdrv)
-	@$(MAKE) -f makefile.sdl -s
+	@$(MAKE) -f makefile.rg35xx -s
 
 endif
 else
@@ -406,7 +408,7 @@ $(objdir)dep/generated/m68kops.h $(objdir)dep/generated/m68kops.c: $(objdir)cpu/
 
 $(objdir)cpu/m68k/m68kmake: $(srcdir)cpu/m68k/m68kmake.c
 	@echo Compiling Musashi MC680x0 core \(m68kmake.c\)...
-	@$(CC) $(CFLAGS) $(srcdir)cpu/m68k/m68kmake.c -o $(objdir)cpu/m68k/m68kmake -Dmain=main
+	@$(HOST_CC) $(HOST_CFLAGS) $(srcdir)cpu/m68k/m68kmake.c -o $(objdir)cpu/m68k/m68kmake -Dmain=main
 
 
 #
@@ -417,7 +419,7 @@ ctv.d ctv.o:	$(ctv.h)
 
 $(ctv.h):	ctv_make.cpp
 	@echo Generating $(srcdir)dep/generated/$(@F)...
-	@$(CC) $(CXXFLAGS) $(LDFLAGS) $< \
+	@$(HOST_CC) $(HOST_CXXFLAGS) $(HOST_LDFLAGS) $< \
 		-o $(subst $(srcdir),$(objdir),$(<D))/$(<F:.cpp=.exe)
 	@$(subst $(srcdir),$(objdir),$(<D))/$(<F:.cpp=.exe) >$@
 
@@ -474,7 +476,7 @@ pgm_draw.d pgm_draw.o:	$(pgm_sprite.h)
 
 $(pgm_sprite.h):	pgm_sprite_create.cpp
 	@echo Generating $(srcdir)dep/generated/$(@F)...
-	@$(CC) $(CXXFLAGS) $(LDFLAGS) $< \
+	@$(HOST_CC) $(HOST_CXXFLAGS) $(HOST_LDFLAGS) $< \
 		-o $(subst $(srcdir),$(objdir),$(<D))/$(<F:.cpp=.exe)
 	@$(subst $(srcdir),$(objdir),$(<D))/$(<F:.cpp=.exe) >$@
 
