@@ -193,7 +193,7 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 
 			// Player 1 controls
 			if (strcmp(szi, "p1 start") == 0) {
-				KEY(FBK_RG35XX_START);
+				KEY(0x4088);
 				return 0;
 			}
 			if (strcmp(szi, "p1 select" ) == 0) {
@@ -201,7 +201,7 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 				return 0;
 			}
 			if (strcmp(szi, "p1 coin" ) == 0) {
-				KEY(FBK_RG35XX_SELECT);
+				KEY(0x4087);
 				return 0;
 			}
 
@@ -688,7 +688,6 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	char* szSearch = szPlay[nPlayer & 3];
 	INT32 nJoyBase = 0;
 
-	// fprintf(stderr, "src/burner/gamc.cpp: %d: nDevice=%d szi=%s banyak lewat sini\n", __LINE__, nDevice, szi);
 	if (_strnicmp(szSearch, szi, 3) != 0) {	// Not our player
 		return 1;
 	}
@@ -726,29 +725,29 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	if (nDevice == -1) {
 		// Keyboard
 		if (strcmp(szi, "up") == 0 || strcmp(szi, "y-axis-neg") == 0) {
-			KEY(FBK_RG35XX_UP);
+			KEY(FBK_UPARROW);
 		}
 		if (strcmp(szi, "down") == 0 || strcmp(szi, "y-axis-pos") == 0) {
-			KEY(FBK_RG35XX_DOWN);
+			KEY(FBK_DOWNARROW);
 		}
 		if (strcmp(szi, "left") == 0 || strcmp(szi, "x-axis-neg") == 0) {
-			KEY(FBK_RG35XX_LEFT);
+			KEY(FBK_LEFTARROW);
 		}
 		if (strcmp(szi, "right") == 0 || strcmp(szi, "x-axis-pos") == 0) {
-			KEY(FBK_RG35XX_RIGHT);
+			KEY(FBK_RIGHTARROW);
 		}
 		if (nFireButtons == 4) {
 			if (strcmp(szi, "fire 1") == 0) {
-				KEY(FBK_RG35XX_A);
+				KEY(FBK_Z);
 			}
 			if (strcmp(szi, "fire 2") == 0) {
-				KEY(FBK_RG35XX_B);
+				KEY(FBK_X);
 			}
 			if (strcmp(szi, "fire 3") == 0) {
-				KEY(FBK_RG35XX_Y);
+				KEY(FBK_C);
 			}
 			if (strcmp(szi, "fire 4") == 0) {
-				KEY(FBK_RG35XX_X);
+				KEY(FBK_V);
 			}
 
 //			if (_stricmp(szi, "Button ABC") == 0) {
@@ -764,22 +763,22 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 		} else {
 			if (bStreetFighterLayout) {
 				if (strcmp(szi, "fire 1") == 0) {
-					KEY(FBK_RG35XX_A);
+					KEY(FBK_A);
 				}
 				if (strcmp(szi, "fire 2") == 0) {
-					KEY(FBK_RG35XX_B);
+					KEY(FBK_S);
 				}
 				if (strcmp(szi, "fire 3") == 0) {
-					KEY(FBK_RG35XX_Y);
+					KEY(FBK_D);
 				}
 				if (strcmp(szi, "fire 4") == 0) {
-					KEY(FBK_RG35XX_X);
+					KEY(FBK_Z);
 				}
 				if (strcmp(szi, "fire 5") == 0) {
-					KEY(FBK_RG35XX_LEFT);
+					KEY(FBK_X);
 				}
 				if (strcmp(szi, "fire 6") == 0) {
-					KEY(FBK_RG35XX_RIGHT);
+					KEY(FBK_C);
 				}
 				if (_stricmp(szi, "3� Punch") == 0) {
 					MACRO(FBK_F);
@@ -789,22 +788,22 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 				}
 			} else {
 				if (strcmp(szi, "fire 1") == 0) {
-					KEY(FBK_RG35XX_A);
+					KEY(FBK_Z);
 				}
 				if (strcmp(szi, "fire 2") == 0) {
-					KEY(FBK_RG35XX_B);
+					KEY(FBK_X);
 				}
 				if (strcmp(szi, "fire 3") == 0) {
-					KEY(FBK_RG35XX_Y);
+					KEY(FBK_C);
 				}
 				if (strcmp(szi, "fire 4") == 0) {
-					KEY(FBK_RG35XX_X);
+					KEY(FBK_A);
 				}
 				if (strcmp(szi, "fire 5") == 0) {
-					KEY(FBK_RG35XX_LEFT);
+					KEY(FBK_S);
 				}
 				if (strcmp(szi, "fire 6") == 0) {
-					KEY(FBK_RG35XX_RIGHT);
+					KEY(FBK_D);
 				}
 				if (strcmp(szi, "fire 7") == 0) {
 					KEY(FBK_Q);
@@ -826,16 +825,16 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	nJoyBase |= nDevice << 8;
 
 	if (strcmp(szi, "up") == 0)	{
-		KEY(nJoyBase + 0x02)
+		KEY(nJoyBase + 0x10 + 0x02)
 	}
 	if (strcmp(szi, "down") == 0) {
-		KEY(nJoyBase + 0x03)
+		KEY(nJoyBase + 0x10 + 0x03)
 	}
 	if (strcmp(szi, "left") == 0)	{
-		KEY(nJoyBase + 0x00)
+		KEY(nJoyBase + 0x10 + 0x00)
 	}
 	if (strcmp(szi, "right") == 0) {
-		KEY(nJoyBase + 0x01)
+		KEY(nJoyBase + 0x10 + 0x01)
 	}
 	if (strncmp(szi, "fire ", 5) == 0) {
 		char *szb = szi + 5;
@@ -1078,4 +1077,3 @@ INT32 GamcPlayerHotRod(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nFla
 
 #undef MACRO
 #undef KEY
-

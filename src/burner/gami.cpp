@@ -1890,22 +1890,22 @@ static INT32 GameInpAutoOne(struct GameInp* pgi, char* szi)
 				}
 				break;
 #else
-			case 0:										// Keyboard
+			/*case 0:										// Keyboard
 				GamcAnalogKey(pgi, szi, i, nSlide);
 				GamcPlayer(pgi, szi, i, -1);
 				GamcMisc(pgi, szi, i);
-				break;
-			case 1:										// Joystick 1
+				break;*/
+			case 0:										// Joystick 1
 				GamcAnalogJoy(pgi, szi, i, 0, nSlide);
 				GamcPlayer(pgi, szi, i, 0);
 				GamcMisc(pgi, szi, i);
 				break;
-			case 2:										// Joystick 2
+			case 1:										// Joystick 2
 				GamcAnalogJoy(pgi, szi, i, 1, nSlide);
 				GamcPlayer(pgi, szi, i, 1);
 				GamcMisc(pgi, szi, i);
 				break;
-			case 3:										// Joystick 3
+			case 2:										// Joystick 3
 				GamcAnalogJoy(pgi, szi, i, 2, nSlide);
 				GamcPlayer(pgi, szi, i, 2);
 				GamcMisc(pgi, szi, i);
