@@ -54,10 +54,6 @@ typedef struct tagIMAGE {
  #include "burner_qt.h"
 #endif
 
-#if defined (INCLUDE_LIB_PNGH)
- #include "png.h"
-#endif
-
 // ---------------------------------------------------------------------------
 // OS independent functionality
 
