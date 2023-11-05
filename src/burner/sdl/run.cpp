@@ -134,6 +134,8 @@ unsigned int GetTime(void)
 // If bDraw is true, it's the last frame before we are up to date, and so we should draw the screen
 static int RunFrame(int bDraw, int bPause)
 {
+	int res = 0;
+
 	if (!bDrvOkay)
 	{
 		return 1;
@@ -147,14 +149,14 @@ static int RunFrame(int bDraw, int bPause)
 
 	if (bPause)
 	{
-		InputMake(false);
+		res |= InputMake(false);
 		VidPaint(0);
 	}
 	else
 	{
 		nFramesEmulated++;
 		nCurrentFrame++;
-		InputMake(true);
+		res |= InputMake(true);
 	}
 
 	if (bDraw)
@@ -189,12 +191,14 @@ static int RunFrame(int bDraw, int bPause)
 		}
 	}
 
-	return 0;
+	return res;
 }
 
 // Callback used when DSound needs more sound
 static int RunGetNextSound(int bDraw)
 {
+	int res = 0;
+
 	if (nAudNextSound == NULL)
 	{
 		return 1;
@@ -204,36 +208,36 @@ static int RunGetNextSound(int bDraw)
 	{
 		if (bAppDoStep)
 		{
-			RunFrame(bDraw, 0);
+			res |= RunFrame(bDraw, 0);
 			memset(nAudNextSound, 0, nAudSegLen << 2);                                        // Write silence into the buffer
 		}
 		else
 		{
-			RunFrame(bDraw, 1);
+			res |= RunFrame(bDraw, 1);
 		}
 
 		bAppDoStep = 0;                                                   // done one step
-		return 0;
+		return res;
 	}
 
 	if (bAppDoFast)
 	{                                            // do more frames
 		for (int i = 0; i < nFastSpeed; i++)
 		{
-			RunFrame(0, 0);
+			res |= RunFrame(0, 0);
 		}
 	}
 
 	// Render frame with sound
 	pBurnSoundOut = nAudNextSound;
-	RunFrame(bDraw, 0);
+	res |= RunFrame(bDraw, 0);
 	if (bAppDoStep)
 	{
 		memset(nAudNextSound, 0, nAudSegLen << 2);                // Write silence into the buffer
 	}
 	bAppDoStep = 0;                                              // done one step
 
-	return 0;
+	return res;
 }
 
 int delay_ticks(int ticks)
@@ -256,12 +260,13 @@ int delay_ticks(int ticks)
 int RunIdle()
 {
 	int nTime, nCount;
+	int res = 0;
 
 	if (bAudPlaying)
 	{
 		// Run with sound
-		AudSoundCheck();
-		return 0;
+		res = AudSoundCheck();
+		return res;
 	}
 
 	// Run without sound
@@ -284,8 +289,8 @@ int RunIdle()
 			nCount = 10;
 		}
 		else {
-			RunFrame(1, 1);					// Paused
-			return 0;
+			res |= RunFrame(1, 1);					// Paused
+			return res;
 		}
 	}
 	bAppDoStep = 0;
@@ -295,7 +300,7 @@ int RunIdle()
 	{									// do more frames
 		for (int i = 0; i < nFastSpeed; i++)
 		{
-			RunFrame(0, 0);
+			res |= RunFrame(0, 0);
 		}
 	}
 
@@ -303,13 +308,13 @@ int RunIdle()
 	{
 		for (int i = nCount / 10; i > 0; i--)
 		{              // Mid-frames
-			RunFrame(0, 0);
+			res |= RunFrame(0, 0);
 		}
 	}
-	RunFrame(1, 0);                                  // End-frame
+	res |= RunFrame(1, 0);                                  // End-frame
 	// temp added for SDLFBA
 	//VidPaint(0);
-	return 0;
+	return res;
 }
 
 int RunReset()
@@ -416,6 +421,7 @@ void pause_game()
 int RunMessageLoop()
 {
 	int quit = 0;
+	int res = 0;
 
 	RunInit();
 	GameInpCheckMouse();                                                                     // Hide the cursor
@@ -531,17 +537,14 @@ int RunMessageLoop()
 					break;
 				}
 				break;
-			case SDL_JOYBUTTONUP:
-				if (event.jbutton.button == 9) quit = 1;
-				break;
-			case SDL_JOYBUTTONDOWN:
-				if (event.jbutton.button == 9) quit = 1;
-				break;
-						}
+			}
 		}
-		if (SDL_JoystickGetButton(0, 9)) quit = 1; 
-		RunIdle();
-
+		
+		res = RunIdle();
+		if (res & RG35XX_REQUEST_QUIT) quit = 1;	// POWER
+		if (res & RG35XX_REQUEST_SAVESTATE) QuickState(1);	// R1
+		if (res & RG35XX_REQUEST_LOADSTATE) QuickState(0);	// L1
+		if (res & RG35XX_REQUEST_SCREENSHOT) MakeScreenShot();	// MENU
 	}
 
 	RunExit();

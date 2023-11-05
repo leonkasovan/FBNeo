@@ -15,6 +15,7 @@
 static UINT8* pSShot = NULL;
 static UINT8* pFreeMe[3] = { NULL, NULL, NULL };
 static FILE* ff = NULL;
+extern char lastMessage[MESSAGE_MAX_LENGTH];
 
 static void free_temp_imagen()
 {
@@ -197,7 +198,7 @@ INT32 MakeScreenShot()
 	strcpy(text_ptr[4].keyword, "Creation Time");	text_ptr[4].text = szTime;
 	strcpy(text_ptr[5].keyword, "Software");		text_ptr[5].text = szSoftware;
 	strcpy(text_ptr[6].keyword, "Source");			text_ptr[6].text = szSource;
-	strcpy(text_ptr[7].keyword, "Comment");			text_ptr[7].text = "This screenshot was created by running the game in an emulator; it might not accurately reflect the actual hardware the game was designed to run on.";
+	strcpy(text_ptr[7].keyword, "Comment");			text_ptr[7].text = "This screenshot was created by running the game in FBNeo emulator; it might not accurately reflect the actual hardware the game was designed to run on.";
 
 	for (int i = 0; i < num_text; i++) {
 		text_ptr[i].type = SPNG_TEXT;
@@ -233,6 +234,6 @@ INT32 MakeScreenShot()
 	fclose(ff);
 
 	free_temp_imagen();
-
+	snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Save to %s", szSShotName);
 	return SSHOT_NOERROR;
 }

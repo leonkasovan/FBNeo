@@ -138,3 +138,8 @@ public:
 extern TCHAR szAppListsPath[MAX_PATH];
 extern TCHAR szAppDatListsPath[MAX_PATH];
 extern TCHAR szAppArchivesPath[MAX_PATH];
+
+#define RG35XX_REQUEST_QUIT 2
+#define RG35XX_REQUEST_SAVESTATE 4
+#define RG35XX_REQUEST_LOADSTATE 8
+#define RG35XX_REQUEST_SCREENSHOT 16

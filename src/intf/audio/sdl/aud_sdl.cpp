@@ -69,6 +69,7 @@ static int SDLSoundBlankSound()
 static int SDLSoundCheck()
 {
 	int nPlaySeg, nFollowingSeg;
+	int res = 0;
 
 	if (!bAudPlaying)
 		return 1;
@@ -99,7 +100,7 @@ static int SDLSoundCheck()
 		int bDraw;
 
 		bDraw = (nFollowingSeg == nPlaySeg);//	|| bAlwaysDrawFrames;	// If this is the last seg of sound, flag bDraw (to draw the graphics)
-		GetNextSound(bDraw);                                // get more sound into nAudNextSound
+		res |= GetNextSound(bDraw);                                // get more sound into nAudNextSound
 
 		if (nAudDSPModule[0])
 		{
@@ -112,7 +113,7 @@ static int SDLSoundCheck()
 		WRAP_INC(nFollowingSeg);
 	}
 
-	return 0;
+	return res;
 }
 
 static int SDLSoundExit()

@@ -220,6 +220,7 @@ INT32 InputMake(bool bCopy)
 {
 	struct GameInp* pgi;
 	UINT32 i;
+	int res = 0;
 
 	if (!bInputOkay || nInputSelect >= INPUT_LEN) {
 		return 1;
@@ -230,6 +231,22 @@ INT32 InputMake(bool bCopy)
 	bCinpOkay = AppProcessKeyboardInput();
 
 	InputTick();
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4084)) {
+		res |= RG35XX_REQUEST_QUIT;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d QUIT", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4086)) {
+		res |= RG35XX_REQUEST_SAVESTATE;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d SAVE STATE", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4085)) {
+		res |= RG35XX_REQUEST_LOADSTATE;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d LOAD STATE", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4089)) {
+		res |= RG35XX_REQUEST_SCREENSHOT;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d SCREENSHOT", res);
+	}
 
 	for (i = 0, pgi = GameInp; i < nGameInpCount; i++, pgi++) {
 		if (pgi->Input.pVal == NULL) {
@@ -257,6 +274,7 @@ INT32 InputMake(bool bCopy)
 				break;
 			case GIT_SWITCH: {						// Digital input
 				INT32 s = CinpState(pgi->Input.Switch.nCode);
+				// if (s) snprintf(lastMessage, MESSAGE_MAX_LENGTH, "nCode=0x%.2X", pgi->Input.Switch.nCode);
 
 				if (pgi->nType & BIT_GROUP_ANALOG) {
 					// Set analog controls to full
@@ -446,7 +464,7 @@ INT32 InputMake(bool bCopy)
 		}
 	}
 
-	return 0;
+	return res;
 }
 
 // Use this function as follows:
