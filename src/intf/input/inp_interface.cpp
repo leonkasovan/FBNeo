@@ -247,6 +247,12 @@ INT32 InputMake(bool bCopy)
 		res |= RG35XX_REQUEST_SCREENSHOT;
 		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d SCREENSHOT", res);
 	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x408A)) {
+		res |= RG35XX_REQUEST_VOLUME_UP;
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x408B)) {
+		res |= RG35XX_REQUEST_VOLUME_DOWN;
+	}
 
 	for (i = 0, pgi = GameInp; i < nGameInpCount; i++, pgi++) {
 		if (pgi->Input.pVal == NULL) {

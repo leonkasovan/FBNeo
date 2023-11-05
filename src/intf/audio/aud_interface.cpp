@@ -2,7 +2,7 @@
 #include "burner.h"
 
 INT32 nAudSampleRate[8] = { 44100, 44100, 22050, 22050, 22050, 22050, 22050, 22050 };			// sample rate
-INT32 nAudVolume = 10000;				// Sound volume (% * 100)
+INT32 nAudVolume = 2000;				// Sound volume (% * 100)
 INT32 nAudSegCount = 6;				// Segs in the pdsbLoop buffer
 INT32 nAudSegLen = 0;					// Seg length in samples (calculated from Rate/Fps)
 INT32 nAudAllocSegLen = 0;

@@ -121,6 +121,7 @@ int ConfigAppLoad()
 		FLT(nGamma);
 		VAR(nAudSampleRate[0]);
 		VAR(nAudDSPModule[0]);
+		VAR(nAudVolume);
 		VAR(nInterpolation);
 		VAR(nFMInterpolation);
 		VAR(EnableHiscores);
@@ -232,6 +233,8 @@ int ConfigAppSave()
 	VAR(nAudSampleRate[0]);
 	fprintf(f, "\n// If non-zero, enable DSP filter\n");
 	VAR(nAudDSPModule[0]);
+	fprintf(f, "\n// Audio volume\n");
+	VAR(nAudVolume);
 	_ftprintf(f, _T("\n// The order of PCM/ADPCM interpolation\n"));
 	VAR(nInterpolation);
 	_ftprintf(f, _T("\n// The order of FM interpolation\n"));

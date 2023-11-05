@@ -425,7 +425,7 @@ int RunMessageLoop()
 
 	RunInit();
 	GameInpCheckMouse();                                                                     // Hide the cursor
-
+	AudSoundSetVolume();
 	while (!quit)
 	{
 		
@@ -543,8 +543,19 @@ int RunMessageLoop()
 		res = RunIdle();
 		if (res & RG35XX_REQUEST_QUIT) quit = 1;	// POWER
 		if (res & RG35XX_REQUEST_SAVESTATE) QuickState(1);	// R1
-		if (res & RG35XX_REQUEST_LOADSTATE) QuickState(0);	// L1
+		else if (res & RG35XX_REQUEST_LOADSTATE) QuickState(0);	// L1
 		if (res & RG35XX_REQUEST_SCREENSHOT) MakeScreenShot();	// MENU
+		if (res & RG35XX_REQUEST_VOLUME_UP){
+			nAudVolume += 100;
+			if (nAudVolume > 10000) nAudVolume = 10000;
+			AudSoundSetVolume();
+			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Volume %d", nAudVolume);
+		}else if (res & RG35XX_REQUEST_VOLUME_DOWN){
+			nAudVolume -= 100;
+			if (nAudVolume < 0) nAudVolume = 0;
+			AudSoundSetVolume();
+			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Volume %d", nAudVolume);
+		}
 	}
 
 	RunExit();
