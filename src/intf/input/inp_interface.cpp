@@ -253,6 +253,12 @@ INT32 InputMake(bool bCopy)
 	if (pInputInOut[nInputSelect]->ReadSwitch(0x408B)) {
 		res |= RG35XX_REQUEST_VOLUME_DOWN;
 	}
+	if (pInputInOut[nInputSelect]->ReadJoyAxis(0,5)>0) {
+		res |= RG35XX_REQUEST_SAVESTATE;
+	}
+	if (pInputInOut[nInputSelect]->ReadJoyAxis(0,2)>0) {
+		res |= RG35XX_REQUEST_LOADSTATE;
+	}
 
 	for (i = 0, pgi = GameInp; i < nGameInpCount; i++, pgi++) {
 		if (pgi->Input.pVal == NULL) {
