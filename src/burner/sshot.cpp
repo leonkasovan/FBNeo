@@ -41,6 +41,7 @@ INT32 MakeScreenShot()
 	char szSShotName[MAX_PATH] = { 0, };
     INT32 w, h;
 
+	if (messageFrames) return SSHOT_OTHER_ERROR;	// wait until display all frame for message 
 	if (pVidImage == NULL) {
 		return SSHOT_OTHER_ERROR;
 	}
@@ -234,6 +235,6 @@ INT32 MakeScreenShot()
 	fclose(ff);
 
 	free_temp_imagen();
-	snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Save to %s", szSShotName);
+	snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Save to %s", szSShotName); messageFrames = MESSAGE_MAX_FRAMES;
 	return SSHOT_NOERROR;
 }

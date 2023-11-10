@@ -41,6 +41,8 @@ extern char  fpsstring[20]; // TODO: also bad
 extern bool  bAppShowFPS;   // TODO: Also also bad
 extern int nFPS_x;
 extern int nFPS_y;
+extern int nMessage_x;
+extern int nMessage_y;
 extern bool  bAlwaysProcessKeyboardInput;
 extern TCHAR szAppBurnVer[16];
 extern bool  bAppFullscreen;

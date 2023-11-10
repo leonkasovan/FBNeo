@@ -128,6 +128,8 @@ int ConfigAppLoad()
 		VAR(bAppShowFPS);
 		VAR(nFPS_x);
 		VAR(nFPS_y);
+		VAR(nMessage_x);
+		VAR(nMessage_y);
 		VAR(bDrvSaveAll);
 		// Other
 		STR(szAppRomPaths[0]);
@@ -253,6 +255,10 @@ int ConfigAppSave()
 	VAR(nFPS_y);
 	_ftprintf(f, _T("\n// Automatic save/load state\n"));
 	VAR(bDrvSaveAll);
+	_ftprintf(f, _T("\n// X Position of message\n"));
+	VAR(nMessage_x);
+	_ftprintf(f, _T("\n// Y Position of message\n"));
+	VAR(nMessage_y);
 
 	fprintf(f, "\n// The paths to search for rom zips. (include trailing slash)\n");
 	STR(szAppRomPaths[0]);

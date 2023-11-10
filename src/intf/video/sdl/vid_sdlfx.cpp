@@ -6,6 +6,8 @@
 static int nInitedSubsytems = 0;
 int nFPS_x = 10;
 int nFPS_y = 2;
+int nMessage_x = 10;
+int nMessage_y = 440;
 static int nGameWidth = 0, nGameHeight = 0;			// screen size
 SDL_Surface* sdlsBlitFX[2] = { NULL, };				// The image surfaces
 SDL_Surface* sdlsFramebuf = NULL;
@@ -286,7 +288,10 @@ static int Paint(int bValidate)
 	if (bAppShowFPS) draw_string(sdlsBlitFX[nUseSys], fpsstring, nFPS_x, nFPS_y, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
 
 	// render Message
-	draw_string(sdlsBlitFX[nUseSys], lastMessage, 50, 440, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
+	if (messageFrames > 1){
+		draw_string(sdlsBlitFX[nUseSys], lastMessage, nMessage_x, nMessage_y, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
+		messageFrames--;
+	}
 
 	if (nVidFullscreen) {
 		// Double bufferring
