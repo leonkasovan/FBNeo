@@ -17,7 +17,7 @@ static int          nNormalFrac = 0;        // Extra fraction we did
 
 static bool bAppDoStep = 0;
 bool        bAppDoFast = 0;
-bool        bAppShowFPS = 1;
+bool        bAppShowFPS = 0;
 static int  nFastSpeed = 6;
 static bool bscreenshot = 0;
 
@@ -39,7 +39,7 @@ static char Windowtitle[512];
 extern void AdjustImageSize();		// vid_sdl2.cpp
 #endif
 
-int bDrvSaveAll = 0;
+int bDrvSaveAll = 1;
 
 // The automatic save
 int StatedAuto(int bSave)
@@ -60,6 +60,9 @@ int StatedAuto(int bSave)
 		if (nRet && bDrvSaveAll)
 		{
 			nRet = BurnStateLoad(szName, 0, NULL);				// Couldn't get all - okay just try the nvram
+			// if (!nRet) UpdateMessage("Quicksave: NVRAM(only) State Loaded");
+		}else{
+			// UpdateMessage("Quicksave: All State Loaded");
 		}
 	}
 	else
