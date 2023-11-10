@@ -4,7 +4,8 @@
 #include "vid_softfx.h"
 
 static int nInitedSubsytems = 0;
-
+int nFPS_x = 10;
+int nFPS_y = 2;
 static int nGameWidth = 0, nGameHeight = 0;			// screen size
 SDL_Surface* sdlsBlitFX[2] = { NULL, };				// The image surfaces
 SDL_Surface* sdlsFramebuf = NULL;
@@ -48,7 +49,7 @@ void draw_string(SDL_Surface* surface, const char* text, int orig_x, int orig_y,
 	}
 }
 
-static int PrimClear()
+/*static int PrimClear()
 {
 	SDL_FillRect(sdlsFramebuf, NULL, 0);
 
@@ -58,7 +59,7 @@ static int PrimClear()
 	}
 
 	return 0;
-}
+}*/
 
 // Create a secondary DD surface for the screen
 static int BlitFXMakeSurf()
@@ -282,7 +283,7 @@ static int Paint(int bValidate)
 	}
 
 	// render FPS
-	draw_string(sdlsBlitFX[nUseSys], fpsstring, 100, 10, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
+	if (bAppShowFPS) draw_string(sdlsBlitFX[nUseSys], fpsstring, nFPS_x, nFPS_y, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
 
 	// render Message
 	draw_string(sdlsBlitFX[nUseSys], lastMessage, 50, 440, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));

@@ -253,7 +253,7 @@ void bye(void)
 	SDL_Quit();
 }
 
-static int __cdecl AppDebugPrintf(int nStatus, TCHAR* pszFormat, ...)
+/*static int __cdecl AppDebugPrintf(int nStatus, TCHAR* pszFormat, ...)
 {
 
 	va_list args;
@@ -262,7 +262,7 @@ static int __cdecl AppDebugPrintf(int nStatus, TCHAR* pszFormat, ...)
 	va_end(args);
 
 	return 0;
-}
+}*/
 
 int main(int argc, char* argv[])
 {

@@ -125,6 +125,9 @@ int ConfigAppLoad()
 		VAR(nInterpolation);
 		VAR(nFMInterpolation);
 		VAR(EnableHiscores);
+		VAR(bAppShowFPS);
+		VAR(nFPS_x);
+		VAR(nFPS_y);
 		// Other
 		STR(szAppRomPaths[0]);
 		STR(szAppRomPaths[1]);
@@ -239,8 +242,14 @@ int ConfigAppSave()
 	VAR(nInterpolation);
 	_ftprintf(f, _T("\n// The order of FM interpolation\n"));
 	VAR(nFMInterpolation);
-	_ftprintf(f, _T("\n// If non-zero, enable high score saving support.\n"));
+	_ftprintf(f, _T("\n// If non-zero, enable high score saving support\n"));
 	VAR(EnableHiscores);
+	_ftprintf(f, _T("\n// If non-zero, display FPS\n"));
+	VAR(bAppShowFPS);
+	_ftprintf(f, _T("\n// X Position of FPS\n"));
+	VAR(nFPS_x);
+	_ftprintf(f, _T("\n// Y Position of FPS\n"));
+	VAR(nFPS_y);
 
 	fprintf(f, "\n// The paths to search for rom zips. (include trailing slash)\n");
 	STR(szAppRomPaths[0]);
