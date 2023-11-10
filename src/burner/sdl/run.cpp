@@ -429,6 +429,7 @@ int RunMessageLoop()
 	RunInit();
 	GameInpCheckMouse();                                                                     // Hide the cursor
 	AudSoundSetVolume();
+	if (bDrvSaveAll) { snprintf(lastMessage, MESSAGE_MAX_LENGTH, "AUTO SAVE/LOAD STATE = ON"); messageFrames = MESSAGE_MAX_FRAMES; }
 	while (!quit)
 	{
 		
@@ -552,12 +553,12 @@ int RunMessageLoop()
 			nAudVolume += 100;
 			if (nAudVolume > 10000) nAudVolume = 10000;
 			AudSoundSetVolume();
-			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Volume %d", nAudVolume);
+			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Volume up %d", nAudVolume); messageFrames = MESSAGE_MAX_FRAMES;
 		}else if (res & RG35XX_REQUEST_VOLUME_DOWN){
 			nAudVolume -= 100;
 			if (nAudVolume < 0) nAudVolume = 0;
 			AudSoundSetVolume();
-			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Volume %d", nAudVolume);
+			snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Volume down %d", nAudVolume); messageFrames = MESSAGE_MAX_FRAMES;
 		}
 	}
 

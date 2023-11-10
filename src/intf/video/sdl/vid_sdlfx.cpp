@@ -288,7 +288,7 @@ static int Paint(int bValidate)
 	if (bAppShowFPS) draw_string(sdlsBlitFX[nUseSys], fpsstring, nFPS_x, nFPS_y, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
 
 	// render Message
-	if (messageFrames > 1){
+	if (messageFrames > 0){
 		draw_string(sdlsBlitFX[nUseSys], lastMessage, nMessage_x, nMessage_y, SDL_MapRGB(sdlsBlitFX[nUseSys]->format, 255, 255, 255));
 		messageFrames--;
 	}

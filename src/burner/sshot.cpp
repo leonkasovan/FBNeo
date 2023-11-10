@@ -41,7 +41,7 @@ INT32 MakeScreenShot()
 	char szSShotName[MAX_PATH] = { 0, };
     INT32 w, h;
 
-	if (messageFrames) return SSHOT_OTHER_ERROR;	// wait until display all frame for message 
+	if (messageFrames > 0) return SSHOT_OTHER_ERROR;	// wait until display all frame for message 
 	if (pVidImage == NULL) {
 		return SSHOT_OTHER_ERROR;
 	}
