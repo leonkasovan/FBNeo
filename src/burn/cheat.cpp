@@ -6,8 +6,8 @@
 #define CHEAT_MAXCPU	8 // enough?
 
 #define HW_NES ( ((BurnDrvGetHardwareCode() & HARDWARE_PUBLIC_MASK) == HARDWARE_NES) || ((BurnDrvGetHardwareCode() & HARDWARE_PUBLIC_MASK) == HARDWARE_FDS) )
-extern void nes_add_cheat(char *code); // from drv/nes/d_nes.cpp
-extern void nes_remove_cheat(char *code);
+// extern void nes_add_cheat(char *code); // from drv/nes/d_nes.cpp
+// extern void nes_remove_cheat(char *code);
 
 bool bCheatsAllowed;
 CheatInfo* pCheatInfo = NULL;
@@ -113,20 +113,20 @@ INT32 CheatUpdate()
 	return 0;
 }
 
-static void NESCheatDisable(CheatInfo* pCurrentCheat, INT32 nCheat)
-{
+// static void NESCheatDisable(CheatInfo* pCurrentCheat, INT32 nCheat)
+// {
 	// Deactivate old option (if any)
-	CheatAddressInfo* pAddressInfo = pCurrentCheat->pOption[pCurrentCheat->nCurrent]->AddressInfo;
+	// CheatAddressInfo* pAddressInfo = pCurrentCheat->pOption[pCurrentCheat->nCurrent]->AddressInfo;
 
-	while (pAddressInfo->nAddress) {
-		if (HW_NES) {
+	// while (pAddressInfo->nAddress) {
+	// 	if (HW_NES) {
 			// Disable Game Genie code
-			bprintf(0, _T("NES-Cheat #%d, option #%d: "), nCheat, pCurrentCheat->nCurrent);
-			nes_remove_cheat(pAddressInfo->szGenieCode);
-		}
-		pAddressInfo++;
-	}
-}
+			// bprintf(0, _T("NES-Cheat #%d, option #%d: "), nCheat, pCurrentCheat->nCurrent);
+			// nes_remove_cheat(pAddressInfo->szGenieCode);
+// 		}
+// 		pAddressInfo++;
+// 	}
+// }
 
 INT32 CheatEnable(INT32 nCheat, INT32 nOption) // -1 / 0 - disable
 {
@@ -160,11 +160,11 @@ INT32 CheatEnable(INT32 nCheat, INT32 nOption) // -1 / 0 - disable
 				return 0;
 			}
 
-			if (HW_NES && pCurrentCheat->nCurrent != nOption) {
+			// if (HW_NES && pCurrentCheat->nCurrent != nOption) {
 				// NES: going from one option to the next in a list, must deactivate
 				// previous option before selecting the next, unless we're coming from default.
-				NESCheatDisable(pCurrentCheat, nCheat);
-			}
+				// NESCheatDisable(pCurrentCheat, nCheat);
+			// }
 
 			if (deactivate) { // disable cheat option
 				if (pCurrentCheat->nType != 1) {
@@ -213,10 +213,10 @@ INT32 CheatEnable(INT32 nCheat, INT32 nOption) // -1 / 0 - disable
 
 					pCurrentCheat->bModified = 0;
 
-					if (HW_NES) {
+					/*if (HW_NES) {
 						bprintf(0, _T("NES-Cheat #%d, option #%d: "), nCheat, nOption);
 						nes_add_cheat(pAddressInfo->szGenieCode);
-					} else {
+					} else */{
 						// Prefill data
 						if (pCurrentCheat->nPrefillMode) {
 							UINT8 nPrefill = 0x00;
