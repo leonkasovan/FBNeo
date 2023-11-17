@@ -46,7 +46,7 @@ UNICODE=
 objdir	= obj/
 srcdir	= src/
 
-include makefile.burn_rules
+include makefile.burn_rules_arcade_only
 
 # Platform stuff
 alldir	+= 	burner burner/sdl burner/sdl dep/libs/libspng dep/libs/lib7z dep/libs/zlib intf intf/video \

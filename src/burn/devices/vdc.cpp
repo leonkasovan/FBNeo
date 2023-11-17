@@ -353,256 +353,256 @@ static void conv_obj(INT32 which, INT32 halfplane, INT32 i, INT32 l, INT32 hf, I
 	}
 }
 
-static void pce_refresh_sprites(INT32 which, INT32 line, UINT8 *drawn, UINT16 *line_buffer)
-{
-	INT32 i;
-	UINT8 sprites_drawn = 0;
+// static void pce_refresh_sprites(INT32 which, INT32 line, UINT8 *drawn, UINT16 *line_buffer)
+// {
+// 	INT32 i;
+// 	UINT8 sprites_drawn = 0;
 
-	/* Are we in greyscale mode or in color mode? */
-	INT32 color_base = vce_control & 0x80 ? 512 : 0;
-	INT32 half_plane = ((vdc_data[which][MWR] & 0x0c) == 0x04) << 7;
+// 	/* Are we in greyscale mode or in color mode? */
+// 	INT32 color_base = vce_control & 0x80 ? 512 : 0;
+// 	INT32 half_plane = ((vdc_data[which][MWR] & 0x0c) == 0x04) << 7;
 
-	/* count up: Highest priority is Sprite 0 */
-	for(i = 0; i < 64; i++)
-	{
-		static const INT32 cgy_table[] = {16, 32, 64, 64};
+// 	/* count up: Highest priority is Sprite 0 */
+// 	for(i = 0; i < 64; i++)
+// 	{
+// 		static const INT32 cgy_table[] = {16, 32, 64, 64};
 
-		INT32 obj_y = (vdc_sprite_ram[which][(i << 2) + 0] & 0x03FF) - 64;
-		INT32 obj_x = (vdc_sprite_ram[which][(i << 2) + 1] & 0x03FF) - 32;
-		INT32 obj_i = (vdc_sprite_ram[which][(i << 2) + 2] & 0x07FE);
-		INT32 obj_lsb = (vdc_sprite_ram[which][(i << 2) + 2] & 0x0001) | half_plane;
-		INT32 obj_a = (vdc_sprite_ram[which][(i << 2) + 3]);
-		INT32 cgx   = (obj_a >> 8) & 1;   /* sprite width */
-		INT32 cgy   = (obj_a >> 12) & 3;  /* sprite height */
-		INT32 hf	= (obj_a >> 11) & 1;  /* horizontal flip */
-		INT32 vf	= (obj_a >> 15) & 1;  /* vertical flip */
-		INT32 palette = (obj_a & 0x000F);
-		INT32 priority = (obj_a >> 7) & 1;
-		INT32 obj_h = cgy_table[cgy];
-		INT32 obj_l = (line - obj_y);
-		INT32 cgypos;
-		UINT8 buf[16];
+// 		INT32 obj_y = (vdc_sprite_ram[which][(i << 2) + 0] & 0x03FF) - 64;
+// 		INT32 obj_x = (vdc_sprite_ram[which][(i << 2) + 1] & 0x03FF) - 32;
+// 		INT32 obj_i = (vdc_sprite_ram[which][(i << 2) + 2] & 0x07FE);
+// 		INT32 obj_lsb = (vdc_sprite_ram[which][(i << 2) + 2] & 0x0001) | half_plane;
+// 		INT32 obj_a = (vdc_sprite_ram[which][(i << 2) + 3]);
+// 		INT32 cgx   = (obj_a >> 8) & 1;   /* sprite width */
+// 		INT32 cgy   = (obj_a >> 12) & 3;  /* sprite height */
+// 		INT32 hf	= (obj_a >> 11) & 1;  /* horizontal flip */
+// 		INT32 vf	= (obj_a >> 15) & 1;  /* vertical flip */
+// 		INT32 palette = (obj_a & 0x000F);
+// 		INT32 priority = (obj_a >> 7) & 1;
+// 		INT32 obj_h = cgy_table[cgy];
+// 		INT32 obj_l = (line - obj_y);
+// 		INT32 cgypos;
+// 		UINT8 buf[16];
 
-		if ((obj_y == -64) || (obj_y > line)) continue;
-		if ((obj_x == -32) || (obj_x >= vdc_width[which])) continue;
+// 		if ((obj_y == -64) || (obj_y > line)) continue;
+// 		if ((obj_x == -32) || (obj_x >= vdc_width[which])) continue;
 
-		/* no need to draw an object that's ABOVE where we are. */
-		if((obj_y + obj_h) < line) continue;
+// 		/* no need to draw an object that's ABOVE where we are. */
+// 		if((obj_y + obj_h) < line) continue;
 
-		/* If CGX is set, bit 0 of sprite pattern index is forced to 0 */
-		if ( cgx )
-			obj_i &= ~2;
+// 		/* If CGX is set, bit 0 of sprite pattern index is forced to 0 */
+// 		if ( cgx )
+// 			obj_i &= ~2;
 
-		/* If CGY is set to 1, bit 1 of the sprite pattern index is forced to 0. */
-		if ( cgy & 1 )
-			obj_i &= ~4;
+// 		/* If CGY is set to 1, bit 1 of the sprite pattern index is forced to 0. */
+// 		if ( cgy & 1 )
+// 			obj_i &= ~4;
 
-		/* If CGY is set to 2 or 3, bit 1 and 2 of the sprite pattern index are forced to 0. */
-		if ( cgy & 2 )
-			obj_i &= ~12;
+// 		/* If CGY is set to 2 or 3, bit 1 and 2 of the sprite pattern index are forced to 0. */
+// 		if ( cgy & 2 )
+// 			obj_i &= ~12;
 
-		if (obj_l < obj_h)
-		{
-			sprites_drawn++;
-			if(sprites_drawn > 16)
-			{
-				if(vdc_data[which][0x05] & 0x02)
-				{
-					/* note: flag is set only if irq is taken, Mizubaku Daibouken relies on this behaviour */
-					vdc_status[which] |= 0x02;
-					h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
-#if DINK_DEBUG
-					bprintf(0, _T("SPR-Overflow  line %d\n"), vce_current_line);
-#endif
-				}
-				if (~PCEDips[2] & 0x10) // check sprite limit enforcement
-					continue;
-			}
+// 		if (obj_l < obj_h)
+// 		{
+// 			sprites_drawn++;
+// 			if(sprites_drawn > 16)
+// 			{
+// 				if(vdc_data[which][0x05] & 0x02)
+// 				{
+// 					/* note: flag is set only if irq is taken, Mizubaku Daibouken relies on this behaviour */
+// 					vdc_status[which] |= 0x02;
+// 					h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
+// #if DINK_DEBUG
+// 					bprintf(0, _T("SPR-Overflow  line %d\n"), vce_current_line);
+// #endif
+// 				}
+// 				if (~PCEDips[2] & 0x10) // check sprite limit enforcement
+// 					continue;
+// 			}
 
-			cgypos = (obj_l >> 4);
-			if(vf) cgypos = ((obj_h - 1) >> 4) - cgypos;
+// 			cgypos = (obj_l >> 4);
+// 			if(vf) cgypos = ((obj_h - 1) >> 4) - cgypos;
 
-			if(cgx == 0)
-			{
-				INT32 x;
-				INT32 pixel_x = ( ( obj_x * main_width ) / vdc_width[which] );
+// 			if(cgx == 0)
+// 			{
+// 				INT32 x;
+// 				INT32 pixel_x = ( ( obj_x * main_width ) / vdc_width[which] );
 
-				conv_obj(which, obj_lsb, obj_i + (cgypos << 2), obj_l, hf, vf, buf);
+// 				conv_obj(which, obj_lsb, obj_i + (cgypos << 2), obj_l, hf, vf, buf);
 
-				for(x = 0; x < 16; x++)
-				{
-					if(((obj_x + x) < (vdc_width[which])) && ((obj_x + x) >= 0))
-					{
-						if ( buf[x] )
-						{
-							if( drawn[pixel_x] < 2 )
-							{
-								if( priority || drawn[pixel_x] == 0 )
-								{
-									line_buffer[pixel_x] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
+// 				for(x = 0; x < 16; x++)
+// 				{
+// 					if(((obj_x + x) < (vdc_width[which])) && ((obj_x + x) >= 0))
+// 					{
+// 						if ( buf[x] )
+// 						{
+// 							if( drawn[pixel_x] < 2 )
+// 							{
+// 								if( priority || drawn[pixel_x] == 0 )
+// 								{
+// 									line_buffer[pixel_x] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
 
-									if ( vdc_width[which] != 512 )
-									{
-										INT32 dp = 1;
-										while ( pixel_x + dp < ( ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which] ) )
-										{
-											drawn[pixel_x + dp] = i + 2;
-											line_buffer[pixel_x + dp] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
-											dp++;
-										}
-									}
-								}
-								drawn[pixel_x] = i + 2;
-							}
-							/* Check for sprite #0 collision */
-							else if (drawn[pixel_x] == 2)
-							{
-								if(vdc_data[which][0x05] & 0x01) {
-									h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
-#if DINK_DEBUG
-									bprintf(0, _T("SPR-Collision0  line %d\n"), vce_current_line);
-#endif
-								}
-								vdc_status[which] |= 0x01;
-							}
-						}
-					}
-					if ( vdc_width[which] != 512 )
-					{
-						pixel_x = ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which];
-					}
-					else
-					{
-						pixel_x += 1;
-					}
-				}
-			}
-			else
-			{
-				INT32 x;
-				INT32 pixel_x = ( ( obj_x * main_width ) / vdc_width[which] );
+// 									if ( vdc_width[which] != 512 )
+// 									{
+// 										INT32 dp = 1;
+// 										while ( pixel_x + dp < ( ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which] ) )
+// 										{
+// 											drawn[pixel_x + dp] = i + 2;
+// 											line_buffer[pixel_x + dp] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
+// 											dp++;
+// 										}
+// 									}
+// 								}
+// 								drawn[pixel_x] = i + 2;
+// 							}
+// 							/* Check for sprite #0 collision */
+// 							else if (drawn[pixel_x] == 2)
+// 							{
+// 								if(vdc_data[which][0x05] & 0x01) {
+// 									h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
+// #if DINK_DEBUG
+// 									bprintf(0, _T("SPR-Collision0  line %d\n"), vce_current_line);
+// #endif
+// 								}
+// 								vdc_status[which] |= 0x01;
+// 							}
+// 						}
+// 					}
+// 					if ( vdc_width[which] != 512 )
+// 					{
+// 						pixel_x = ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which];
+// 					}
+// 					else
+// 					{
+// 						pixel_x += 1;
+// 					}
+// 				}
+// 			}
+// 			else
+// 			{
+// 				INT32 x;
+// 				INT32 pixel_x = ( ( obj_x * main_width ) / vdc_width[which] );
 
-				conv_obj(which, obj_lsb, obj_i + (cgypos << 2) + (hf ? 2 : 0), obj_l, hf, vf, buf);
+// 				conv_obj(which, obj_lsb, obj_i + (cgypos << 2) + (hf ? 2 : 0), obj_l, hf, vf, buf);
 
-				for(x = 0; x < 16; x++)
-				{
-					if(((obj_x + x) < (vdc_width[which])) && ((obj_x + x) >= 0))
-					{
-						if ( buf[x] )
-						{
-							if( drawn[pixel_x] < 2 )
-							{
-								if ( priority || drawn[pixel_x] == 0 )
-								{
-									line_buffer[pixel_x] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
-									if ( vdc_width[which] != 512 )
-									{
-										INT32 dp = 1;
-										while ( pixel_x + dp < ( ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which] ) )
-										{
-											drawn[pixel_x + dp] = i + 2;
-											line_buffer[pixel_x + dp] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
-											dp++;
-										}
-									}
-								}
-								drawn[pixel_x] = i + 2;
-							}
-							/* Check for sprite #0 collision */
-							else if ( drawn[pixel_x] == 2 )
-							{
-								if(vdc_data[which][0x05] & 0x01) {
-									h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
-#if DINK_DEBUG
-									bprintf(0, _T("SPR-Collision1  line %d\n"), vce_current_line);
-#endif
-								}
-								vdc_status[which] |= 0x01;
-							}
-						}
-					}
-					if ( vdc_width[which] != 512 )
-					{
-						pixel_x = ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which];
-					}
-					else
-					{
-						pixel_x += 1;
-					}
-				}
+// 				for(x = 0; x < 16; x++)
+// 				{
+// 					if(((obj_x + x) < (vdc_width[which])) && ((obj_x + x) >= 0))
+// 					{
+// 						if ( buf[x] )
+// 						{
+// 							if( drawn[pixel_x] < 2 )
+// 							{
+// 								if ( priority || drawn[pixel_x] == 0 )
+// 								{
+// 									line_buffer[pixel_x] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
+// 									if ( vdc_width[which] != 512 )
+// 									{
+// 										INT32 dp = 1;
+// 										while ( pixel_x + dp < ( ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which] ) )
+// 										{
+// 											drawn[pixel_x + dp] = i + 2;
+// 											line_buffer[pixel_x + dp] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
+// 											dp++;
+// 										}
+// 									}
+// 								}
+// 								drawn[pixel_x] = i + 2;
+// 							}
+// 							/* Check for sprite #0 collision */
+// 							else if ( drawn[pixel_x] == 2 )
+// 							{
+// 								if(vdc_data[which][0x05] & 0x01) {
+// 									h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
+// #if DINK_DEBUG
+// 									bprintf(0, _T("SPR-Collision1  line %d\n"), vce_current_line);
+// #endif
+// 								}
+// 								vdc_status[which] |= 0x01;
+// 							}
+// 						}
+// 					}
+// 					if ( vdc_width[which] != 512 )
+// 					{
+// 						pixel_x = ( ( obj_x + x + 1 ) * main_width ) / vdc_width[which];
+// 					}
+// 					else
+// 					{
+// 						pixel_x += 1;
+// 					}
+// 				}
 
-				/* 32 pixel wide sprites are counted as 2 sprites and the right half
-				   		is only drawn if there are 2 open slots.
-						*/
-				sprites_drawn++;
-				if( sprites_drawn > 16 )
-				{
-					if(vdc_data[which][0x05] & 0x02)
-					{
-						/* note: flag is set only if irq is taken, Mizubaku Daibouken relies on this behaviour */
-						vdc_status[which] |= 0x02;
-						h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
-#if DINK_DEBUG
-						bprintf(0, _T("SPR-Overflow  line %d\n"), vce_current_line);
-#endif
-					}
-					if (~PCEDips[2] & 0x10) // check sprite limit enforcement
-						continue;
-				}
+// 				/* 32 pixel wide sprites are counted as 2 sprites and the right half
+// 				   		is only drawn if there are 2 open slots.
+// 						*/
+// 				sprites_drawn++;
+// 				if( sprites_drawn > 16 )
+// 				{
+// 					if(vdc_data[which][0x05] & 0x02)
+// 					{
+// 						/* note: flag is set only if irq is taken, Mizubaku Daibouken relies on this behaviour */
+// 						vdc_status[which] |= 0x02;
+// 						h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
+// #if DINK_DEBUG
+// 						bprintf(0, _T("SPR-Overflow  line %d\n"), vce_current_line);
+// #endif
+// 					}
+// 					if (~PCEDips[2] & 0x10) // check sprite limit enforcement
+// 						continue;
+// 				}
 				
-				{
-					conv_obj(which, obj_lsb, obj_i + (cgypos << 2) + (hf ? 0 : 2), obj_l, hf, vf, buf);
-					for(x = 0; x < 16; x++)
-					{
-						if(((obj_x + 0x10 + x) < (vdc_width[which])) && ((obj_x + 0x10 + x) >= 0))
-						{
-							if ( buf[x] )
-							{
-								if( drawn[pixel_x] < 2 )
-								{
-									if( priority || drawn[pixel_x] == 0 )
-									{
-										line_buffer[pixel_x] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
-										if ( vdc_width[which] != 512 )
-										{
-											INT32 dp = 1;
-											while ( pixel_x + dp < ( ( ( obj_x + x + 17 ) * main_width ) / vdc_width[which] ) )
-											{
-												drawn[pixel_x + dp] = i + 2;
-												line_buffer[pixel_x + dp] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
-												dp++;
-											}
-										}
-									}
-									drawn[pixel_x] = i + 2;
-								}
-								/* Check for sprite #0 collision */
-								else if ( drawn[pixel_x] == 2 )
-								{
-									if(vdc_data[which][0x05] & 0x01) {
-										h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
-#if DINK_DEBUG
-										bprintf(0, _T("SPR-Collision2  line %d\n"), vce_current_line);
-#endif
-									}
-									vdc_status[which] |= 0x01;
-								}
-							}
-						}
-						if ( vdc_width[which] != 512 )
-						{
-							pixel_x = ( ( obj_x + x + 17 ) * main_width ) / vdc_width[which];
-						}
-						else
-						{
-							pixel_x += 1;
-						}
-					}
-				}
-			}
-		}
-	}
-}
+// 				{
+// 					conv_obj(which, obj_lsb, obj_i + (cgypos << 2) + (hf ? 0 : 2), obj_l, hf, vf, buf);
+// 					for(x = 0; x < 16; x++)
+// 					{
+// 						if(((obj_x + 0x10 + x) < (vdc_width[which])) && ((obj_x + 0x10 + x) >= 0))
+// 						{
+// 							if ( buf[x] )
+// 							{
+// 								if( drawn[pixel_x] < 2 )
+// 								{
+// 									if( priority || drawn[pixel_x] == 0 )
+// 									{
+// 										line_buffer[pixel_x] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
+// 										if ( vdc_width[which] != 512 )
+// 										{
+// 											INT32 dp = 1;
+// 											while ( pixel_x + dp < ( ( ( obj_x + x + 17 ) * main_width ) / vdc_width[which] ) )
+// 											{
+// 												drawn[pixel_x + dp] = i + 2;
+// 												line_buffer[pixel_x + dp] = color_base + vce_data[0x100 + (palette << 4) + buf[x]];
+// 												dp++;
+// 											}
+// 										}
+// 									}
+// 									drawn[pixel_x] = i + 2;
+// 								}
+// 								/* Check for sprite #0 collision */
+// 								else if ( drawn[pixel_x] == 2 )
+// 								{
+// 									if(vdc_data[which][0x05] & 0x01) {
+// 										h6280SetIRQLine(0, CPU_IRQSTATUS_ACK);
+// #if DINK_DEBUG
+// 										bprintf(0, _T("SPR-Collision2  line %d\n"), vce_current_line);
+// #endif
+// 									}
+// 									vdc_status[which] |= 0x01;
+// 								}
+// 							}
+// 						}
+// 						if ( vdc_width[which] != 512 )
+// 						{
+// 							pixel_x = ( ( obj_x + x + 17 ) * main_width ) / vdc_width[which];
+// 						}
+// 						else
+// 						{
+// 							pixel_x += 1;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 
 static void clear_line(INT32 line)
@@ -866,183 +866,183 @@ static void pce_refresh_line(INT32 which, INT32 /*line*/, INT32 external_input, 
 	}
 }
 
-void pce_hblank()
-{
-	vdc_check_hblank_raster_irq(0);
+// void pce_hblank()
+// {
+// 	vdc_check_hblank_raster_irq(0);
 
-	INT32 which = 0; // only 1 on pce
+// 	INT32 which = 0; // only 1 on pce
 
-	if (vdc_current_segment[which] == STATE_VDW && vdc_current_segment_line[0] < 262 )
-	{
-		UINT8 drawn[684];
-		UINT16 *line_buffer = vdc_tmp_draw + (vdc_current_segment_line[which] * 684) + 86;
-		clear_line(vdc_current_segment_line[which]);
+// 	if (vdc_current_segment[which] == STATE_VDW && vdc_current_segment_line[0] < 262 )
+// 	{
+// 		UINT8 drawn[684];
+// 		UINT16 *line_buffer = vdc_tmp_draw + (vdc_current_segment_line[which] * 684) + 86;
+// 		clear_line(vdc_current_segment_line[which]);
 
-		memset (drawn, 0, 684);
+// 		memset (drawn, 0, 684);
 
-		vdc_yscroll[which] = (vdc_current_segment_line[which] == 0) ? vdc_data[which][BYR] : (vdc_yscroll[which] + 1);
+// 		vdc_yscroll[which] = (vdc_current_segment_line[which] == 0) ? vdc_data[which][BYR] : (vdc_yscroll[which] + 1);
 
-		if (nBurnLayer & 1)
-			pce_refresh_line(0, vdc_current_segment_line[which], 0, drawn, line_buffer);
+// 		if (nBurnLayer & 1)
+// 			pce_refresh_line(0, vdc_current_segment_line[which], 0, drawn, line_buffer);
 
-		if (vdc_data[which][CR] & CR_SB)
-		{
-			if (nSpriteEnable & 1)
-				pce_refresh_sprites(0, vdc_current_segment_line[which], drawn, line_buffer);
-		}
-	}
-}
+// 		if (vdc_data[which][CR] & CR_SB)
+// 		{
+// 			if (nSpriteEnable & 1)
+// 				pce_refresh_sprites(0, vdc_current_segment_line[which], drawn, line_buffer);
+// 		}
+// 	}
+// }
 
-void sgx_hblank()
-{
-	vdc_check_hblank_raster_irq(0);
-	vdc_check_hblank_raster_irq(1);
+// void sgx_hblank()
+// {
+// 	vdc_check_hblank_raster_irq(0);
+// 	vdc_check_hblank_raster_irq(1);
 
-	if ( vdc_current_segment[0] == STATE_VDW && vdc_current_segment_line[0] < 262 )
-	{
-		UINT8 drawn[2][512*2];
-		UINT16 *line_buffer;
-		UINT16 temp_buffer[2][512*2];
-		INT32 i;
+// 	if ( vdc_current_segment[0] == STATE_VDW && vdc_current_segment_line[0] < 262 )
+// 	{
+// 		UINT8 drawn[2][512*2];
+// 		UINT16 *line_buffer;
+// 		UINT16 temp_buffer[2][512*2];
+// 		INT32 i;
 
-		clear_line_sgx(vdc_current_segment_line[0]); // clear line
+// 		clear_line_sgx(vdc_current_segment_line[0]); // clear line
 
-		memset( drawn, 0, sizeof(drawn) );
-		memset( temp_buffer, 0, sizeof(temp_buffer) );
+// 		memset( drawn, 0, sizeof(drawn) );
+// 		memset( temp_buffer, 0, sizeof(temp_buffer) );
 
-		vdc_yscroll[0] = ( vdc_current_segment_line[0] == 0 ) ? vdc_data[0][BYR] : ( vdc_yscroll[0] + 1 );
-		vdc_yscroll[1] = ( vdc_current_segment_line[1] == 0 ) ? vdc_data[1][BYR] : ( vdc_yscroll[1] + 1 );
+// 		vdc_yscroll[0] = ( vdc_current_segment_line[0] == 0 ) ? vdc_data[0][BYR] : ( vdc_yscroll[0] + 1 );
+// 		vdc_yscroll[1] = ( vdc_current_segment_line[1] == 0 ) ? vdc_data[1][BYR] : ( vdc_yscroll[1] + 1 );
 
-		if (nBurnLayer & 1)
-			pce_refresh_line( 0, vdc_current_segment_line[0], 0, drawn[0], temp_buffer[0]);
+// 		if (nBurnLayer & 1)
+// 			pce_refresh_line( 0, vdc_current_segment_line[0], 0, drawn[0], temp_buffer[0]);
 
-		if(vdc_data[0][CR] & CR_SB)
-		{
-			if (nSpriteEnable & 1)
-				pce_refresh_sprites(0, vdc_current_segment_line[0], drawn[0], temp_buffer[0]);
-		}
+// 		if(vdc_data[0][CR] & CR_SB)
+// 		{
+// 			if (nSpriteEnable & 1)
+// 				pce_refresh_sprites(0, vdc_current_segment_line[0], drawn[0], temp_buffer[0]);
+// 		}
 
-		if (nBurnLayer & 2)
-			pce_refresh_line( 1, vdc_current_segment_line[1], 1, drawn[1], temp_buffer[1]);
+// 		if (nBurnLayer & 2)
+// 			pce_refresh_line( 1, vdc_current_segment_line[1], 1, drawn[1], temp_buffer[1]);
 
-		if ( vdc_data[1][CR] & CR_SB )
-		{
-			if (nSpriteEnable & 2)
-				pce_refresh_sprites(1, vdc_current_segment_line[1], drawn[1], temp_buffer[1]);
-		}
+// 		if ( vdc_data[1][CR] & CR_SB )
+// 		{
+// 			if (nSpriteEnable & 2)
+// 				pce_refresh_sprites(1, vdc_current_segment_line[1], drawn[1], temp_buffer[1]);
+// 		}
 
-		line_buffer = vdc_tmp_draw + (vdc_current_segment_line[0] * 684) + 86;
+// 		line_buffer = vdc_tmp_draw + (vdc_current_segment_line[0] * 684) + 86;
 
-		for( i = 0; i < 512; i++ )
-		{
-			INT32 cur_prio = vpc_prio_map[i];
+// 		for( i = 0; i < 512; i++ )
+// 		{
+// 			INT32 cur_prio = vpc_prio_map[i];
 
-			if ( vpc_vdc0_enabled[cur_prio] )
-			{
-				if ( vpc_vdc1_enabled[cur_prio] )
-				{
-					switch( vpc_prio[cur_prio] )
-					{
-						case 0:	/* BG1 SP1 BG0 SP0 */
-							if ( drawn[0][i] )
-							{
-								line_buffer[i] = temp_buffer[0][i];
-							}
-							else if ( drawn[1][i] )
-							{
-								line_buffer[i] = temp_buffer[1][i];
-							}
-							break;
-						case 1:	/* BG1 BG0 SP1 SP0 */
-							if ( drawn[0][i] )
-							{
-								if ( drawn[0][i] > 1 )
-								{
-									line_buffer[i] = temp_buffer[0][i];
-								}
-								else
-								{
-									if ( drawn[1][i] > 1 )
-									{
-										line_buffer[i] = temp_buffer[1][i];
-									}
-									else
-									{
-										line_buffer[i] = temp_buffer[0][i];
-									}
-								}
-							}
-							else if ( drawn[1][i] )
-							{
-								line_buffer[i] = temp_buffer[1][i];
-							}
-							break;
-						case 2:
-							if ( drawn[0][i] )
-							{
-								if ( drawn[0][i] > 1 )
-								{
-									if ( drawn[1][i] == 1 )
-									{
-										line_buffer[i] = temp_buffer[1][i];
-									}
-									else
-									{
-										line_buffer[i] = temp_buffer[0][i];
-									}
-								}
-								else
-								{
-									line_buffer[i] = temp_buffer[0][i];
-								}
-							}
-							else if ( drawn[1][i] )
-							{
-								line_buffer[i] = temp_buffer[1][i];
-							}
-							break;
-					}
-				}
-				else
-				{
-					if ( drawn[0][i] )
-					{
-						line_buffer[i] = temp_buffer[0][i];
-					}
-				}
-			}
-			else
-			{
-				if ( vpc_vdc1_enabled[cur_prio] )
-				{
-					if ( drawn[1][i] )
-					{
-						line_buffer[i] = temp_buffer[1][i];
-					}
-				}
-			}
-		}
-	}
-}
+// 			if ( vpc_vdc0_enabled[cur_prio] )
+// 			{
+// 				if ( vpc_vdc1_enabled[cur_prio] )
+// 				{
+// 					switch( vpc_prio[cur_prio] )
+// 					{
+// 						case 0:	/* BG1 SP1 BG0 SP0 */
+// 							if ( drawn[0][i] )
+// 							{
+// 								line_buffer[i] = temp_buffer[0][i];
+// 							}
+// 							else if ( drawn[1][i] )
+// 							{
+// 								line_buffer[i] = temp_buffer[1][i];
+// 							}
+// 							break;
+// 						case 1:	/* BG1 BG0 SP1 SP0 */
+// 							if ( drawn[0][i] )
+// 							{
+// 								if ( drawn[0][i] > 1 )
+// 								{
+// 									line_buffer[i] = temp_buffer[0][i];
+// 								}
+// 								else
+// 								{
+// 									if ( drawn[1][i] > 1 )
+// 									{
+// 										line_buffer[i] = temp_buffer[1][i];
+// 									}
+// 									else
+// 									{
+// 										line_buffer[i] = temp_buffer[0][i];
+// 									}
+// 								}
+// 							}
+// 							else if ( drawn[1][i] )
+// 							{
+// 								line_buffer[i] = temp_buffer[1][i];
+// 							}
+// 							break;
+// 						case 2:
+// 							if ( drawn[0][i] )
+// 							{
+// 								if ( drawn[0][i] > 1 )
+// 								{
+// 									if ( drawn[1][i] == 1 )
+// 									{
+// 										line_buffer[i] = temp_buffer[1][i];
+// 									}
+// 									else
+// 									{
+// 										line_buffer[i] = temp_buffer[0][i];
+// 									}
+// 								}
+// 								else
+// 								{
+// 									line_buffer[i] = temp_buffer[0][i];
+// 								}
+// 							}
+// 							else if ( drawn[1][i] )
+// 							{
+// 								line_buffer[i] = temp_buffer[1][i];
+// 							}
+// 							break;
+// 					}
+// 				}
+// 				else
+// 				{
+// 					if ( drawn[0][i] )
+// 					{
+// 						line_buffer[i] = temp_buffer[0][i];
+// 					}
+// 				}
+// 			}
+// 			else
+// 			{
+// 				if ( vpc_vdc1_enabled[cur_prio] )
+// 				{
+// 					if ( drawn[1][i] )
+// 					{
+// 						line_buffer[i] = temp_buffer[1][i];
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
-void pce_interrupt()
-{
-#if defined FBNEO_DEBUG
-	if (!DebugDev_VDCInitted) bprintf(PRINT_ERROR, _T("pce_interrupt called without init\n"));
-#endif
+// void pce_interrupt()
+// {
+// #if defined FBNEO_DEBUG
+// 	if (!DebugDev_VDCInitted) bprintf(PRINT_ERROR, _T("pce_interrupt called without init\n"));
+// #endif
 
-	vdc_advance_line(0);
-}
+// 	vdc_advance_line(0);
+// }
 
-void sgx_interrupt()
-{
-#if defined FBNEO_DEBUG
-	if (!DebugDev_VDCInitted) bprintf(PRINT_ERROR, _T("sgx_interrupt called without init\n"));
-#endif
+// void sgx_interrupt()
+// {
+// #if defined FBNEO_DEBUG
+// 	if (!DebugDev_VDCInitted) bprintf(PRINT_ERROR, _T("sgx_interrupt called without init\n"));
+// #endif
 
-	vdc_advance_line( 0 );
-	vdc_advance_line( 1 );
-}
+// 	vdc_advance_line( 0 );
+// 	vdc_advance_line( 1 );
+// }
 
 static void vdc_do_dma(INT32 which)
 {

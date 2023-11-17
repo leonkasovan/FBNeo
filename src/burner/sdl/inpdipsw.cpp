@@ -5,7 +5,7 @@
 
 static int nDIPOffset;
 
-static bool bOK;
+// static bool bOK;
 
 struct GroupOfDIPSwitches GroupDIPSwitchesArray[MAXDIPSWITCHES];
 
@@ -49,12 +49,12 @@ bool setDIPSwitchOption(int dipgroup, int dipoption)		// Returns true if DIP is 
 	GroupDIPSwitchesArray[dipgroup].SelectedDIPOption = dipoption;
 	return (dipoption != GroupDIPSwitchesArray[dipgroup].DefaultDIPOption);
 }
-
+/*
 static int InpDIPSWListBegin()
 {
 	return 0;
-}
-
+}*/
+/*
 static bool CheckSetting(int i)
 {
 	BurnDIPInfo bdi;
@@ -95,7 +95,7 @@ static bool CheckSetting(int i)
 	}
 	return false;
 }
-
+*/
 // Make a list of DIPswitches
 static int InpDIPSWListMake()
 {
@@ -131,7 +131,7 @@ static int InpDIPSWListMake()
 	}
 	return dipcount;		// Return number of DIPs
 }
-
+/*
 static int InpDIPSWInit()
 {
 	BurnDIPInfo     bdi;
@@ -142,7 +142,7 @@ static int InpDIPSWInit()
 	InpDIPSWListBegin();
 	InpDIPSWListMake();
 
-/*	for (int i = 0, j = 0; BurnDrvGetDIPInfo(&bdi, i) == 0; i++)
+	for (int i = 0, j = 0; BurnDrvGetDIPInfo(&bdi, i) == 0; i++)
 	{
 		if (bdi.nInput >= 0 && bdi.nFlags == 0xFF)
 		{
@@ -151,7 +151,7 @@ static int InpDIPSWInit()
 			j++;
 		}
 	}	// This is the same as DefaultDIPOption... ?
-*/
+
 	return 0;
 }
 
@@ -160,12 +160,11 @@ static int InpDIPSWExit()
 	GameInpCheckMouse();
 	return 0;
 }
-
 static void InpDIPSWCancel()
 {
 	if (!bOK)
 	{
-/*		int             i = 0, j = 0;
+		int             i = 0, j = 0;
 		BurnDIPInfo     bdi;
 		struct GameInp* pgi;
 		while (BurnDrvGetDIPInfo(&bdi, i) == 0)
@@ -178,7 +177,7 @@ static void InpDIPSWCancel()
 			}
 			i++;
 		}	// Is this just like InpDIPSWResetDIPs() ???
-*/
+
 		InpDIPSWResetDIPs();
 	}
 }
@@ -187,7 +186,7 @@ static void InpDIPSWCancel()
 static void InpDIPSWSelect()
 {
 }
-
+*/
 int InpDIPSWCreate()
 {
 	if (bDrvOkay == 0) {									// No game is loaded
