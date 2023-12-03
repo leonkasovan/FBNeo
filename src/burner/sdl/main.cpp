@@ -33,7 +33,7 @@ int gameSelectedFromFilter = -1;
 TCHAR szAppBurnVer[16];
 char videofiltering[3];
 bool gamefound = 0;
-const char* romname = NULL;
+char* romname = NULL;
 
 extern void InitSupportPaths();
 

@@ -23,6 +23,10 @@ static SDL_Rect dstrect;
 static char Windowtitle[512];
 static int display_w = 400, display_h = 300;
 Uint32 screenFlags;
+int nFPS_x = 10;
+int nFPS_y = 2;
+int nMessage_x = 10;
+int nMessage_y = 440;
 
 extern UINT16 maxLinesMenu;	// sdl2_gui_ingame.cpp: number of lines to show in ingame menus
 extern bool didReinitialise;

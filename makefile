@@ -121,4 +121,7 @@ pi: FORCE
 rg35xx: FORCE
 	@$(MAKE) -s -f makefile.rg35xx
 
+rg35xx-koriki: FORCE
+	@$(MAKE) -s -f makefile-koriki.rg35xx
+
 FORCE:
