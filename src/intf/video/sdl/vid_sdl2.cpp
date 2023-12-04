@@ -21,12 +21,12 @@ static int  nRotateGame = 0;
 static bool bFlipped = false;
 static SDL_Rect dstrect;
 static char Windowtitle[512];
-static int display_w = 400, display_h = 300;
+static int display_w = 640, display_h = 480;
 Uint32 screenFlags;
-int nFPS_x = 10;
+int nFPS_x = 2;
 int nFPS_y = 2;
-int nMessage_x = 10;
-int nMessage_y = 440;
+int nMessage_x = 2;
+int nMessage_y = 230;
 
 extern UINT16 maxLinesMenu;	// sdl2_gui_ingame.cpp: number of lines to show in ingame menus
 extern bool didReinitialise;
@@ -40,20 +40,12 @@ void RenderMessage()
 	}
 	if (bAppShowFPS)
 	{
-		if (bAppFullscreen)
-		{
-			inprint_shadowed(sdlRenderer, fpsstring, 10, 50);
-		} 
-		else 
-		{
-			sprintf(Windowtitle, "FBNeo - FPS: %s - %s - %s", fpsstring, BurnDrvGetTextA(DRV_NAME), BurnDrvGetTextA(DRV_FULLNAME));
-			SDL_SetWindowTitle(sdlWindow, Windowtitle);
-		}
+		inprint_shadowed(sdlRenderer, fpsstring, nFPS_x, nFPS_y);
 	}
 
-	if (messageFrames > 1)
+	if (messageFrames > 0)
 	{
-		inprint_shadowed(sdlRenderer, lastMessage, 10, 30);
+		inprint_shadowed(sdlRenderer, lastMessage, nMessage_x, nMessage_y);
 		messageFrames--;
 	}
 }
@@ -111,17 +103,20 @@ void AdjustImageSize()
 				SDL_RenderSetLogicalSize(sdlRenderer, (display_h * w / h), display_h);
 				dstrect.x = ((display_h * w / h) - display_w) / 2;
 				dstrect.y = 0;
+				fprintf(stderr,"src/intf/video/sdl/vid_sdl2.cpp LINE=%d w=%d h=%d display_w=%d display_h=%d dstrect.x=%d dstrect.y=%d\n", __LINE__, w, h, display_w, display_h, dstrect.x, dstrect.y);
 			} else {
 				SDL_RenderSetLogicalSize(sdlRenderer, display_w, (display_w * h / w));
 				dstrect.x = 0;
 				dstrect.y = ((display_w * h / w) - display_h) / 2;
+				fprintf(stderr,"src/intf/video/sdl/vid_sdl2.cpp LINE=%d w=%d h=%d display_w=%d display_h=%d dstrect.x=%d dstrect.y=%d\n", __LINE__, w, h, display_w, display_h, dstrect.x, dstrect.y);
 			}
 		} else {
 			SDL_RestoreWindow(sdlWindow);
-			SDL_SetWindowSize(sdlWindow, display_w * 2, display_h * 2);
+			SDL_SetWindowSize(sdlWindow, 640, 480);
 			SDL_RenderSetLogicalSize(sdlRenderer, display_w, display_h);
 			dstrect.x = 0;
 			dstrect.y = 0;
+			fprintf(stderr,"src/intf/video/sdl/vid_sdl2.cpp LINE=%d display_w=%d display_h=%d dstrect.x=%d dstrect.y=%d\n", __LINE__, display_w, display_h, dstrect.x, dstrect.y);
 		}
 		maxLinesMenu = display_h / 10 - 6;		// Get number of lines to show in ingame menus
 	}
@@ -207,7 +202,7 @@ static int Init()
 	sr_add_mode(display_w, display_h, rr, interlace, &srm);
 	sr_switch_to_mode(display_w, display_h, rr, interlace, &srm);
 #endif
-
+	fprintf(stderr, "nVidImageWidth=%d nVidImageHeight=%d display_w=%d display_h=%d\n", nVidImageWidth, nVidImageHeight, display_w, display_h);
 	if (nRotateGame)
 	{
 		sdlWindow = SDL_CreateWindow(
@@ -319,7 +314,7 @@ static int Init()
 
 	nMemLen = nVidImageWidth * nVidImageHeight * nVidImageBPP;
 #ifdef FBNEO_DEBUG
-	printf("nVidImageWidth=%d nVidImageHeight=%d nVidImagePitch=%d\n", nVidImageWidth, nVidImageHeight, nVidImagePitch);
+	printf("SDL_CreateTexture nVidImageWidth=%d nVidImageHeight=%d nVidImagePitch=%d\n", nVidImageWidth, nVidImageHeight, nVidImagePitch);
 #endif
 	VidMem = (unsigned char*)malloc(nMemLen);
 	if (VidMem)

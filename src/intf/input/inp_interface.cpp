@@ -231,6 +231,7 @@ INT32 InputMake(bool bCopy)
 	bCinpOkay = AppProcessKeyboardInput();
 
 	InputTick();
+	#ifdef BUILD_SDL
 	if (pInputInOut[nInputSelect]->ReadSwitch(0x4084)) {
 		res |= RG35XX_REQUEST_QUIT;
 		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d QUIT", res);
@@ -259,7 +260,31 @@ INT32 InputMake(bool bCopy)
 	if (pInputInOut[nInputSelect]->ReadJoyAxis(0,2)>0) {
 		res |= RG35XX_REQUEST_LOADSTATE;
 	}
-
+	#endif
+	#ifdef BUILD_SDL2
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4084)) {	// L1
+		res |= RG35XX_REQUEST_SCREENSHOT;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d QUIT", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4085)) {	// R1
+		res |= RG35XX_REQUEST_SAVESTATE;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d SAVE STATE", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4087)) {	// R2
+		res |= RG35XX_REQUEST_LOADSTATE;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d LOAD STATE", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x4086)) {	// L2
+		res |= RG35XX_REQUEST_QUIT;
+		// snprintf(lastMessage, MESSAGE_MAX_LENGTH, "res=%d SCREENSHOT", res);
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x408B)) {
+		res |= RG35XX_REQUEST_VOLUME_UP;
+	}
+	if (pInputInOut[nInputSelect]->ReadSwitch(0x408C)) {
+		res |= RG35XX_REQUEST_VOLUME_DOWN;
+	}
+	#endif
 	for (i = 0, pgi = GameInp; i < nGameInpCount; i++, pgi++) {
 		if (pgi->Input.pVal == NULL) {
 			continue;

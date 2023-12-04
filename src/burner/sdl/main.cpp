@@ -21,7 +21,11 @@ int  nAppVirtualFps = 0;         // App fps * 100
 bool bRunPause = 0;
 bool bAppFullscreen = 0;
 bool bAlwaysProcessKeyboardInput = 0;
+#ifdef BUILD_SDL
 int usemenu = 0, usejoy = 0, vsync = 1, dat = 0;
+#elif defined(BUILD_SDL2)
+int usemenu = 0, usejoy = 1, vsync = 1, dat = 0;
+#endif
 bool bSaveconfig = 1;
 bool bIntegerScale = false;
 bool bAlwaysMenu = false;

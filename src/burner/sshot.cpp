@@ -235,6 +235,6 @@ INT32 MakeScreenShot()
 	fclose(ff);
 
 	free_temp_imagen();
-	snprintf(lastMessage, MESSAGE_MAX_LENGTH, "Save to %s", szSShotName); messageFrames = MESSAGE_MAX_FRAMES;
+	snprintf(lastMessage, MESSAGE_MAX_LENGTH, "%s", szSShotName); messageFrames = MESSAGE_MAX_FRAMES;
 	return SSHOT_NOERROR;
 }

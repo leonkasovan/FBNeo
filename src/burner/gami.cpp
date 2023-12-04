@@ -1865,7 +1865,7 @@ static INT32 GameInpAutoOne(struct GameInp* pgi, char* szi)
 			case 0:
 				// Trying to avoing calling another function to map an already mapped input
 				if (usejoy) {
-					if (GamcAnalogJoy(pgi, szi, i, 0, nSlide) && MapJoystick(pgi, szi, i, 1) && GamcMisc(pgi, szi, i)) GamcPlayer(pgi, szi, i, 0);
+					GamcAnalogJoy(pgi, szi, i, 0, nSlide); GamcPlayer(pgi, szi, i, 0); GamcMisc(pgi, szi, i);
 				} else if (GamcAnalogKey(pgi, szi, i, nSlide) && GamcMisc(pgi, szi, i)) GamcPlayer(pgi, szi, i, -1);
 				break;
 			case 1:

@@ -1,4 +1,43 @@
 // Burner Game Control
+/*
+SDL2 
+ A = button 0
+ B = button 1
+ X = button 2
+ Y = button 3
+ L1 = button 4
+ R1 = button 5
+ L2 = button 6
+ R2 = button 7
+ Select = button 8
+ Start = button 9
+ Menu = button 10
+ Volume+ = button 11
+ Volume- = button 12
+ Up = button 13
+ Down = button 14
+ Left = button 15
+ Right = button 16
+
+ FBNeo mapping
+ A = 0x4080
+ B = 0x4081
+ X = 0x4082
+ Y = 0x4083
+ L1 = 0x4084
+ R1 = 0x4085
+ L2 = 0x4086
+ R2 = 0x4087
+ Select = 0x4088
+ Start = 0x4089
+ Menu = 0x408A
+ Volume+ = 0x408B
+ Volume- = 0x408C
+ Up = 0x408D
+ Down = 0x408E
+ Left = 0x408F
+ Right = 0x4090
+*/
 #include "burner.h"
 
 static char szPlay[4][4]={"p1 ", "p2 ", "p3 ", "p4 "};
@@ -211,7 +250,7 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 				return 0;
 			}
 			if (strcmp(szi, "p1 select" ) == 0) {
-				KEY(0x4087);
+				KEY(FBK_3);
 				return 0;
 			}
 			if (strcmp(szi, "p1 coin" ) == 0) {
@@ -836,10 +875,9 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	}
 
 	// Joystick
-#if defined(BUILD_SDL)
 	nJoyBase = 0x4000;
 	nJoyBase |= nDevice << 8;
-
+#if defined(BUILD_SDL)
 	if (strcmp(szi, "up") == 0)	{
 		KEY(nJoyBase + 0x10 + 0x02)
 	}
@@ -854,16 +892,16 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	}
 #elif defined(BUILD_SDL2)
 	if (strcmp(szi, "up") == 0)	{
-		KEY(nJoyBase + 0x8D)
+		KEY(0x408D)
 	}
 	if (strcmp(szi, "down") == 0) {
-		KEY(nJoyBase + 0x8E)
+		KEY(0x408E)
 	}
 	if (strcmp(szi, "left") == 0)	{
-		KEY(nJoyBase + 0x8F)
+		KEY(0x408F)
 	}
 	if (strcmp(szi, "right") == 0) {
-		KEY(nJoyBase + 0x90)
+		KEY(0x4090)
 	}
 #endif
 	if (strncmp(szi, "fire ", 5) == 0) {
