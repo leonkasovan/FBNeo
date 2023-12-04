@@ -192,6 +192,7 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 			}
 
 			// Player 1 controls
+#if defined(BUILD_SDL)
 			if (strcmp(szi, "p1 start") == 0) {
 				KEY(0x4088);
 				return 0;
@@ -204,6 +205,20 @@ INT32 GamcMisc(struct GameInp* pgi, char* szi, INT32 nPlayer)
 				KEY(0x4087);
 				return 0;
 			}
+#elif defined(BUILD_SDL2)
+			if (strcmp(szi, "p1 start") == 0) {
+				KEY(0x4089);
+				return 0;
+			}
+			if (strcmp(szi, "p1 select" ) == 0) {
+				KEY(0x4087);
+				return 0;
+			}
+			if (strcmp(szi, "p1 coin" ) == 0) {
+				KEY(0x4088);
+				return 0;
+			}
+#endif
 
 			// keyboard keys
 			if (strcmp(szi, "keyb_enter" ) == 0) {
@@ -821,6 +836,7 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	}
 
 	// Joystick
+#if defined(BUILD_SDL)
 	nJoyBase = 0x4000;
 	nJoyBase |= nDevice << 8;
 
@@ -836,6 +852,20 @@ INT32 GamcPlayer(struct GameInp* pgi, char* szi, INT32 nPlayer, INT32 nDevice)
 	if (strcmp(szi, "right") == 0) {
 		KEY(nJoyBase + 0x10 + 0x01)
 	}
+#elif defined(BUILD_SDL2)
+	if (strcmp(szi, "up") == 0)	{
+		KEY(nJoyBase + 0x8D)
+	}
+	if (strcmp(szi, "down") == 0) {
+		KEY(nJoyBase + 0x8E)
+	}
+	if (strcmp(szi, "left") == 0)	{
+		KEY(nJoyBase + 0x8F)
+	}
+	if (strcmp(szi, "right") == 0) {
+		KEY(nJoyBase + 0x90)
+	}
+#endif
 	if (strncmp(szi, "fire ", 5) == 0) {
 		char *szb = szi + 5;
 		INT32 nButton = strtol(szb, NULL, 0);
